@@ -181,8 +181,12 @@ sub process_request {
     system("mkdir -p $rootimg_dir/xcatpost");
     system("cp -r $installroot/postscripts/* $rootimg_dir/xcatpost/");
 
-    #put the image name and timestamp into diskless image when it is packed.
+    #put the image name, uuid and timestamp into diskless image when it is packed.
     `echo IMAGENAME="'$imagename'" > $rootimg_dir/opt/xcat/xcatinfo`;
+
+    my $uuid = `uuidgen`;
+    chomp $uuid;
+    `echo IMAGEUUID="'$uuid'" >> $rootimg_dir/opt/xcat/xcatinfo`;
     
     my $timestamp = `date`;
     chomp $timestamp;
@@ -386,6 +390,18 @@ sub process_request {
             	system("$includestr >> $xcat_packimg_tmpfile"); 
             }
             $excludestr = "cat $xcat_packimg_tmpfile|cpio -H newc -o | $compress -c - > ../rootimg.gz";
+        }
+        $oldmask = umask 0077;
+    } elsif ($method =~ /txc/) {
+        if ( ! $exlistloc ) {
+            $excludestr = "find . -xdev | tar --selinux --xattr-include='*' -T - -Jcvf ../rootimg.txz";
+        }else {
+            chdir("$rootimg_dir");
+            system("$excludestr >> $xcat_packimg_tmpfile"); 
+            if ($includestr) {
+            	system("$includestr >> $xcat_packimg_tmpfile"); 
+            }
+            $excludestr = "cat $xcat_packimg_tmpfile| tar --selinux --xattr-include='*' -T -Jcvf ../rootimg.txz";
         }
         $oldmask = umask 0077;
     } elsif ($method =~ /squashfs/) {

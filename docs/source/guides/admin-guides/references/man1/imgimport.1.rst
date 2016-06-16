@@ -19,9 +19,9 @@ SYNOPSIS
 ********
 
 
-\ **imgimport [-h|--help]**\ 
+\ **imgimport [-h|-**\ **-help]**\ 
 
-\ **imgimport**\  bundle_file_name [-p|--postscripts nodelist] [-f|--profile new_profile] [-v|--verbose]>
+\ **imgimport**\  \ *bundle_file_name*\  [\ **-p | -**\ **-postscripts**\  \ *nodelist*\ ] [\ **-f | -**\ **-profile**\  \ *new_profile*\ ] [\ **-v | -**\ **-verbose**\ ]
 
 
 ***********
@@ -31,7 +31,7 @@ DESCRIPTION
 
 The imgimport command will import an image that has been exported by \ *imgexport*\  from xCAT.  This is the easiest way to transfer/backup/, change or share images created by xCAT whether they be stateless or stateful. The bundle file will be unpacked in the current working directory. The xCAT configuration such as \ *osimage*\  and \ *linuximage*\  tables will then be updated.
 
-For statefull, the following files will be copied to the appropriate directories.
+For stateful, the following files will be copied to the appropriate directories.
   x.pkglist
   x.otherpkgs.pkglist
   x.tmpl
@@ -71,7 +71,7 @@ If -f flag is not specified, all the files will be copied to the same directorie
 
 After this command, you can run the \ *nodeset*\  command and then start deploying the nodes. You can also choose to modify the files and run the following commands before the node depolyment.
 
-For statefull:
+For stateful:
   nodeset
 
 For stateless: 
@@ -90,13 +90,13 @@ OPTIONS
 *******
 
 
-\ **-f|--profile**\  \ *new_prof*\       Import the image with a new profile name.
+\ **-f|-**\ **-profile**\  \ *new_prof*\       Import the image with a new profile name.
 
-\ **-h|--help**\                      Display usage message.
+\ **-h|-**\ **-help**\                      Display usage message.
 
-\ **-p|--postscripts**\  \ *nodelist*\   Import the postscripts. The postscripts contained in the image will be set in the postscripts table for \ *nodelist*\ .
+\ **-p|-**\ **-postscripts**\  \ *nodelist*\   Import the postscripts. The postscripts contained in the image will be set in the postscripts table for \ *nodelist*\ .
 
-\ **-v|--verbose**\                   Verbose output.
+\ **-v|-**\ **-verbose**\                   Verbose output.
 
 
 ************
@@ -114,19 +114,31 @@ EXAMPLES
 ********
 
 
-1. Simplest way to import an image.  If there is a bundle file named 'foo.gz', then run:
+1. Simplest way to import an image. If there is a bundle file named 'foo.gz', then run:
 
-\ *imgimport foo.gz*\ 
+
+.. code-block:: perl
+
+  imgimport foo.gz
+
 
 2. Import the image with postscript names.
 
-\ *imgimport foo.gz -p node1,node2*\ 
+
+.. code-block:: perl
+
+  imgimport foo.gz -p node1,node2
+
 
 The \ *postscripts*\  table will be updated with the name of the \ *postscripts*\  and the \ *postbootscripts*\  for node1 and node2.
 
 3. Import the image with a new profile name
 
-\ *imgimport foo.gz -f compute_test*\ 
+
+.. code-block:: perl
+
+  imgimport foo.gz -f compute_test
+
 
 
 *****

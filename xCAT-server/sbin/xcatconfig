@@ -949,19 +949,10 @@ sub genSSHNodeHostKey
     # generate new hostkeys
     #
     xCAT::MsgUtils->message('I', "Generating new node hostkeys...");
-    xCAT::MsgUtils->message('I', "Generating SSH1 RSA Key...");
-    my $cmd =
-          "/usr/bin/ssh-keygen -t rsa1 -f /etc/xcat/hostkeys/ssh_host_key -C '' -N ''";
-    my $outref = xCAT::Utils->runcmd("$cmd", 0);
-    if ($::RUNCMD_RC != 0)
-    {
-            xCAT::MsgUtils->message('E', "Could not generate SSH1 RSA key.");
-    }
-
     xCAT::MsgUtils->message('I', "Generating SSH2 RSA Key...");
-    $cmd =
+    my $cmd =
           "/usr/bin/ssh-keygen -t rsa -f /etc/xcat/hostkeys/ssh_host_rsa_key -C '' -N ''";
-    $outref = xCAT::Utils->runcmd("$cmd", 0);
+    my $outref = xCAT::Utils->runcmd("$cmd", 0);
     if ($::RUNCMD_RC != 0)
     {
           xCAT::MsgUtils->message('E', "Could not generate SSH2 RSA key.");
@@ -1060,7 +1051,7 @@ sub initDB
     xCAT::Utils->runcmd(
        "/bin/grep ^[^#]*nameserver /etc/resolv.conf | awk '{print \$2}'", -1);
     foreach my $ip (@tmpnames) {
-      if (!grep(/$ip/, @MNnodeipaddr))
+      if (!grep(/^$ip$/, @MNnodeipaddr))
       {     # if not the MN
          push @names,$ip;  # add it as a forwarder
       }
@@ -1172,6 +1163,7 @@ sub initDB
         $chtabcmds .= "$::XCATROOT/sbin/chtab key=dhcplease site.value=43200;";
         $chtabcmds .= "$::XCATROOT/sbin/chtab key=auditnosyslog site.value=0;";
         $chtabcmds .= "$::XCATROOT/sbin/chtab key=xcatsslversion site.value=TLSv1;";
+        $chtabcmds .= "$::XCATROOT/sbin/chtab key=auditskipcmds site.value=ALL;";
         #$chtabcmds .= "$::XCATROOT/sbin/chtab key=useflowcontrol site.value=yes;"; # need to fix 4031
 
         if ($::osname eq 'AIX')
@@ -1312,6 +1304,8 @@ sub initDB
               "$::XCATROOT/sbin/chtab priority=4.7 policy.commands=litefile policy.rule=allow;";
             $chtabcmds .=
               "$::XCATROOT/sbin/chtab priority=4.8 policy.commands=litetree policy.rule=allow;";
+            $chtabcmds .=
+              "$::XCATROOT/sbin/chtab priority=4.9 policy.commands=getadapter policy.rule=allow;";
         }
         my $outref = xCAT::Utils->runcmd("$chtabcmds", 0);
         if ($::RUNCMD_RC != 0)
@@ -1426,16 +1420,17 @@ sub initDB
             }
         }
 
-        # add default value to site.xcatsslversion
-        $cmds = "$::XCATROOT/sbin/chtab key=xcatsslversion site.value=TLSv1;";
-        $outref = xCAT::Utils->runcmd("$cmds", 0);
-        if ($::RUNCMD_RC != 0)
-        {
-            xCAT::MsgUtils->message('E',"Could not add default value for site.xcatsslversion.");
+        # Set default value for site.xcatsslversion when update xcat
+        $cmds = "XCATBYPASS=Y $::XCATROOT/sbin/tabdump site 2>/dev/null |grep xcatsslversion";
+        xCAT::Utils->runcmd("$cmds", -1);
+        if ($::RUNCMD_RC != 0) {
+            # if site.xcatsslversion was not set, then set the default value TLSv1
+            $cmds = "$::XCATROOT/sbin/chtab key=xcatsslversion site.value=TLSv1;";
+            xCAT::Utils->runcmd("$cmds", 0);
+            if ($::RUNCMD_RC != 0) {
+                xCAT::MsgUtils->message('E',"Could not add default value for site.xcatsslversion.");
+            }
         }
-
-
-
    } 
    # remove xcatserver,xcatclient
    # from the postscripts. They are now called by servicenode

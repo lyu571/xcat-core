@@ -1,3 +1,5 @@
+.. _install_guides:
+
 Install Guides
 ==============
 
@@ -7,3 +9,4 @@ Install Guides
    yum/index.rst
    zypper/index.rst
    apt/index.rst
+   maintenance/index.rst 

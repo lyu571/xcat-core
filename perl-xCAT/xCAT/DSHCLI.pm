@@ -20,6 +20,7 @@ require xCAT::DSHCore;
 use xCAT::MsgUtils;
 use xCAT::Utils;
 use xCAT::TableUtils;
+use xCAT::NodeRange;
 use lib '/opt/xcat/xdsh';
 our @dsh_available_contexts = ();
 our @dsh_valid_contexts     = ();
@@ -3824,7 +3825,7 @@ sub usage_dsh
 ## usage message
     my $usagemsg1  = " xdsh -h \n xdsh -q \n xdsh -V \n";
     my $usagemsg1a = "xdsh  <noderange> [-K] [-l logonuserid]\n";
-    my $usagemsg2  = "      [-B bypass ] [-c] [-e] [-E environment_file]
+    my $usagemsg2  = "      [-B | --bypass ] [-c] [-e] [-E environment_file]
       [--devicetype type_of_device] [-f fanout]\n";
     my $usagemsg3 = "      [-l user_ID] [-L]  ";
     my $usagemsg4 = "[-m] [-o options][-q] [-Q] [-r remote_shell]
@@ -4275,7 +4276,7 @@ sub usage_dcp
 {
     ### usage message
     my $usagemsg1 = " xdcp -h \n xdcp -q\n xdcp -V \n xdcp <noderange>\n";
-    my $usagemsg2 = "      [-B bypass] [-c] [-f fanout] [-l user_ID] [--sudo]\n";
+    my $usagemsg2 = "      [-B | --bypass] [-c] [-f fanout] [-l user_ID] [--sudo]\n";
     my $usagemsg3 =
       "      [-m] [-o options] [-p] [-P] [-q] [-Q] [-r node_remote_copy]\n";
     my $usagemsg4 =
@@ -5068,12 +5069,29 @@ sub parse_rsync_input_file_on_MN
            }
          } else {  # not processing EXECUTE, EXECUTEALWAYS or APPEND
           # otherwise it is just the synclist
-          if ($line =~ /(.+) -> (.+)/)
-          {
-
+          # xCAT supports the syncfile format:
+          #   file -> file
+          #   file -> (noderange for permitted nodes) file
+          if ($line =~ /(.+) -> (.+)/ || $line =~ /(.+) -> +\((.+)\) +(.+)/) {
             $::process_line = 1;
-            my $src_file  = $1;
-            my $dest_file = $2;
+            my $src_file;
+            my $dest_file;
+            my $dest_node;
+            my @dest_nodes;
+            if ($line =~ /(.+) -> +\((.+)\) +(.+)/) {
+                $src_file  = $1;
+                $dest_node = $2;
+                $dest_file = $3;
+            } elsif ($line =~ /(.+) -> (.+)/) {
+                $src_file  = $1;
+                $dest_file = $2;
+            }
+
+            # get all the permitted nodes for the line
+            $dest_node =~ s/\s//g;
+            if ($dest_node) {
+                @dest_nodes = noderange($dest_node);
+            }
             $dest_file =~ s/[\s;]//g;
             my @srcfiles = (split ' ', $src_file);
             my $arraysize = scalar @srcfiles;    # of source files on the line
@@ -5102,6 +5120,10 @@ sub parse_rsync_input_file_on_MN
 
             foreach my $target_node (@dest_host)
             {
+                # skip the node if it's NOT in the permitted list
+                if ($dest_node && ! grep /^$target_node$/, @dest_nodes) {
+                    next;
+                }
                 $$options{'destDir_srcFile'}{$target_node} ||= {};
 
                 # for each file on the line

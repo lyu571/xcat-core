@@ -19,9 +19,9 @@ SYNOPSIS
 ********
 
 
-\ **rmkitcomp**\  [\ **-?**\ |\ **-h**\ |\ **--help**\ ] [\ **-v**\ |\ **--version**\ ]
+\ **rmkitcomp**\  [\ **-? | -h | -**\ **-help**\ ] [\ **-v | -**\ **-version**\ ]
 
-\ **rmkitcomp**\  [\ **-V**\ |\ **--verbose**\ ] [\ **-u**\ |\ **--uninstall**\ ] [\ **-f**\ |\ **--force**\ ] [\ **--noscripts**\ ] \ **-i**\  \ *osimage*\   \ *kitcompname_list*\ 
+\ **rmkitcomp**\  [\ **-V | -**\ **-verbose**\ ] [\ **-u | -**\ **-uninstall**\ ] [\ **-f | -**\ **-force**\ ] [\ **-**\ **-noscripts**\ ] \ **-i**\  \ *osimage*\   \ *kitcompname_list*\ 
 
 
 ***********
@@ -29,7 +29,7 @@ DESCRIPTION
 ***********
 
 
-The \ **rmkitcomp**\  command removes kit components from an xCAT osimage.  All the kit component attribute values that are contained in the osimage will be removed, and the kit comoponent meta rpm and package rpm could be uninstalled by <-u|--uninstall> option.
+The \ **rmkitcomp**\  command removes kit components from an xCAT osimage.  All the kit component attribute values that are contained in the osimage will be removed, and the kit comoponent meta rpm and package rpm could be uninstalled by \ **-u|-**\ **-uninstall**\  option.
 
 Note: The xCAT support for Kits is only available for Linux operating systems.
 
@@ -40,37 +40,37 @@ OPTIONS
 
 
 
-\ **-u|--uninstall**\ 
+\ **-u|-**\ **-uninstall**\ 
  
  All the kit component meta rpms and package rpms in otherpkglist will be uninstalled during genimage for stateless image and updatenode for stateful nodes.
  
 
 
-\ **-h|--help**\ 
+\ **-h|-**\ **-help**\ 
  
  Display usage message.
  
 
 
-\ **-V|--verbose**\ 
+\ **-V|-**\ **-verbose**\ 
  
  Verbose mode.
  
 
 
-\ **-v|--version**\ 
+\ **-v|-**\ **-version**\ 
  
  Command version.
  
 
 
-\ **-f|--force**\ 
+\ **-f|-**\ **-force**\ 
  
  Remove this kit component from osimage no matter it is a dependency of other kit components.
  
 
 
-\ **--noscripts**\ 
+\ **-**\ **-noscripts**\ 
  
  Do not remove kitcomponent's postbootscripts from osimage
  
@@ -82,7 +82,7 @@ OPTIONS
  
 
 
-\ **kitcompname_list**\ 
+\ *kitcompname_list*\ 
  
  A comma-delimited list of valid full kit component names or kit component basenames that are to be removed from the osimage. If a basename is specified, all kitcomponents matching that basename will be removed from the osimage.
  
@@ -106,27 +106,51 @@ EXAMPLES
 
 1. To remove a kit component from osimage
 
-rmkitcomp -i rhels6.2-ppc64-netboot-compute comp-test1-1.0-1-rhels-6.2-ppc64
+
+.. code-block:: perl
+
+  rmkitcomp -i rhels6.2-ppc64-netboot-compute comp-test1-1.0-1-rhels-6.2-ppc64
+
 
 Output is similar to:
 
-kitcomponents comp-test1-1.0-1-rhels-6.2-ppc64 were removed from osimage rhels6.2-ppc64-netboot-compute successfully
+
+.. code-block:: perl
+
+  kitcomponents comp-test1-1.0-1-rhels-6.2-ppc64 were removed from osimage rhels6.2-ppc64-netboot-compute successfully
+
 
 2. To remove a kit component even it is still used as a dependency of other kit component.
 
-rmkitcomp -f -i rhels6.2-ppc64-netboot-compute comp-test1-1.0-1-rhels-6.2-ppc64
+
+.. code-block:: perl
+
+  rmkitcomp -f -i rhels6.2-ppc64-netboot-compute comp-test1-1.0-1-rhels-6.2-ppc64
+
 
 Output is similar to:
 
-kitcomponents comp-test1-1.0-1-rhels-6.2-ppc64 were removed from osimage rhels6.2-ppc64-netboot-compute successfully
 
-3. To remove a kit component from osimage and also remove the kit component meta RPM and package RPM.  So in next genimage for statelss image and updatenode for statefull nodes, the kit component meta RPM and package RPM will be uninstalled.
+.. code-block:: perl
 
-rmkitcomp -u -i rhels6.2-ppc64-netboot-compute comp-test1-1.0-1-rhels-6.2-ppc64
+  kitcomponents comp-test1-1.0-1-rhels-6.2-ppc64 were removed from osimage rhels6.2-ppc64-netboot-compute successfully
+
+
+3. To remove a kit component from osimage and also remove the kit component meta RPM and package RPM.  So in next genimage for statelss image and updatenode for stateful nodes, the kit component meta RPM and package RPM will be uninstalled.
+
+
+.. code-block:: perl
+
+  rmkitcomp -u -i rhels6.2-ppc64-netboot-compute comp-test1-1.0-1-rhels-6.2-ppc64
+
 
 Output is similar to:
 
-kitcomponents comp-test1-1.0-1-rhels-6.2-ppc64 were removed from osimage rhels6.2-ppc64-netboot-compute successfully
+
+.. code-block:: perl
+
+  kitcomponents comp-test1-1.0-1-rhels-6.2-ppc64 were removed from osimage rhels6.2-ppc64-netboot-compute successfully
+
 
 
 ********

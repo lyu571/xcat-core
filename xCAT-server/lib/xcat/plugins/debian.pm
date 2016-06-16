@@ -470,6 +470,14 @@ sub mkinstall {
     }
 	
     xCAT::MsgUtils->trace($verbose_on_off,"d","debian->mkinstall: installroot=$installroot");
+    
+    # Check whether the default getinstdisk script exist, if so, copy it into /install/autoinst/
+    if ( -r "$::XCATROOT/share/xcat/install/scripts/getinstdisk") {
+        if (!(-e "$installroot/autoinst")) {
+            mkdir("$installroot/autoinst");
+        }
+        copy("$::XCATROOT/share/xcat/install/scripts/getinstdisk", "$installroot/autoinst/getinstdisk");
+    }
 	
     my $node;
     my $ostab = xCAT::Table->new('nodetype');
@@ -1423,16 +1431,17 @@ sub mknetboot
         }
 
 
-        if($::XCATSITEVALS{xcatdebugmode} eq "1"){
+        if (($::XCATSITEVALS{xcatdebugmode} eq "1") or ($::XCATSITEVALS{xcatdebugmode} eq "2")) {
 
-           my ($host, $ipaddr) = xCAT::NetworkUtils->gethostnameandip($xcatmaster);
-           if($ipaddr){
-              $kcmdline .=" LOGSERVER=$ipaddr ";
-           }else{
-              $kcmdline .=" LOGSERVER=$xcatmaster ";
-           }
+            my ($host, $ipaddr) = xCAT::NetworkUtils->gethostnameandip($xcatmaster);
+            if ($ipaddr) {
+                $kcmdline .=" LOGSERVER=$ipaddr ";
+            }
+            else {
+                $kcmdline .=" LOGSERVER=$xcatmaster ";
+            }
 
-           $kcmdline .= " xcatdebugmode=1 ";
+            $kcmdline .= " xcatdebugmode=$::XCATSITEVALS{xcatdebugmode} ";
         }
 
 

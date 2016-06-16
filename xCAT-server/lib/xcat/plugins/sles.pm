@@ -576,27 +576,25 @@ sub mknetboot
            $kcmdline .= " nonodestatus ";
         }
 
+        if (($::XCATSITEVALS{xcatdebugmode} eq "1") or ($::XCATSITEVALS{xcatdebugmode} eq "2")) {
 
-        if($::XCATSITEVALS{xcatdebugmode} eq "1"){
+            my ($host, $ipaddr) = xCAT::NetworkUtils->gethostnameandip($xcatmaster);
+            if ($ipaddr) {
+                #for use in postscript and postbootscript in xcatdsklspost in the rootimg
+                $kcmdline .=" LOGSERVER=$ipaddr ";
 
-           my ($host, $ipaddr) = xCAT::NetworkUtils->gethostnameandip($xcatmaster);
-           if($ipaddr){
-              #for use in postscript and postbootscript in xcatdsklspost in the rootimg
-              $kcmdline .=" LOGSERVER=$ipaddr ";
+                #for use in syslog dracut module in the initrd
+                $kcmdline .=" syslog.server=$ipaddr syslog.type=rsyslogd syslog.filter=*.* ";
+            }
+            else {
+                #for use in postscript and postbootscript in xcatdsklspost in the rootimg
+                $kcmdline .=" LOGSERVER=$xcatmaster ";
 
-              #for use in syslog dracut module in the initrd
-              $kcmdline .=" syslog.server=$ipaddr syslog.type=rsyslogd syslog.filter=*.* ";
-           }else{
-              #for use in postscript and postbootscript in xcatdsklspost in the rootimg
-              $kcmdline .=" LOGSERVER=$xcatmaster ";
-
-              #for use in syslog dracut module in the initrd
-              $kcmdline .=" syslog.server=$xcatmaster syslog.type=rsyslogd syslog.filter=*.* ";
-           }
-
-           $kcmdline .= " xcatdebugmode=1 ";
+                #for use in syslog dracut module in the initrd
+                $kcmdline .=" syslog.server=$xcatmaster syslog.type=rsyslogd syslog.filter=*.* ";
+            }
+            $kcmdline .= " xcatdebugmode=$::XCATSITEVALS{xcatdebugmode} ";
         }
-
 
         $kcmdline .= "NODE=$node ";
         # add flow control setting
@@ -1070,6 +1068,11 @@ sub mkinstall
              and -r "$pkgdir/1/boot/ppc64le/linux"
              and -r "$pkgdir/1/boot/ppc64le/initrd"
             )
+            or (
+             $arch eq "ppc64"
+             and -r "$pkgdir/1/suseboot/linux64"
+             and -r "$pkgdir/1/suseboot/initrd64"
+            )
             or ($arch =~ /ppc/ and -r "$pkgdir/1/suseboot/inst64")
           )
         {
@@ -1120,12 +1123,25 @@ sub mkinstall
                         xCAT::MsgUtils->trace($verbose_on_off,"d","sles->mkinstall: copy initrd.img and linux to $tftppath");
                     }
                 }
-                elsif ($arch =~ /ppc/)
-                {
+                elsif($arch eq "ppc64"){
                     unless ($noupdateinitrd) {
-                        copy("$pkgdir/1/suseboot/inst64", "$tftppath");
-                        @dd_drivers = &insert_dd($callback, $os, $arch, "$tftppath/inst64", undef, $driverupdatesrc, $netdrivers, $osupdir, $ignorekernelchk);
-                        xCAT::MsgUtils->trace($verbose_on_off,"d","sles->mkinstall: copy inst64 to $tftppath");
+                        if(-r "$pkgdir/1/suseboot/linux64" and -r "$pkgdir/1/suseboot/initrd64"){
+                            #from sles11.3, suseboot/linux64 and suseboot/initrd64 are used for diskful 
+                            #network installation
+                            #the previous suseboot/inst64 can not be run on Power8 BE
+                            copy("$pkgdir/1/suseboot/linux64", "$tftppath");
+                            copy("$pkgdir/1/suseboot/initrd64", "$tftppath");
+                            #TODO: need to verify whether initrd64 and linux64 can be inserted into initrd
+                            #@dd_drivers = &insert_dd($callback, $os, $arch,"$tftppath/initrd64" ,"$tftppath/linux64", undef, $driverupdatesrc, $netdrivers, $osupdir, $ignorekernelchk);
+                            xCAT::MsgUtils->trace($verbose_on_off,"d","sles->mkinstall: copy initrd64 and linux64 to $tftppath");
+                        }
+                        elsif(-r "$pkgdir/1/suseboot/inst64"){
+                            #suseboot/inst64 is used for network installation before sles11.3
+                            #suseboot/inst64 can not be run on Power8 BE
+                            copy("$pkgdir/1/suseboot/inst64", "$tftppath");
+                            @dd_drivers = &insert_dd($callback, $os, $arch, "$tftppath/inst64", undef, $driverupdatesrc, $netdrivers, $osupdir, $ignorekernelchk);
+                            xCAT::MsgUtils->trace($verbose_on_off,"d","sles->mkinstall: copy inst64 to $tftppath");
+                        }
                     }
                 }
             }
@@ -1212,7 +1228,8 @@ sub mkinstall
                         );
                }
                if($gateway eq '<xcatmaster>'){
-                      $gateway = xCAT::NetworkUtils->my_ip_facing($ipaddr);
+                      my @gatewayd = xCAT::NetworkUtils->my_ip_facing($ipaddr);
+                      unless ($gatewayd[0]) { $gateway = $gatewayd[1];}
                }
                $kcmdline .=" hostip=$ipaddr netmask=$netmask gateway=$gateway  hostname=$hostname ";
 
@@ -1224,7 +1241,8 @@ sub mkinstall
                 {
                    my $ip;
                    if($_ eq '<xcatmaster>'){
-                      $ip = xCAT::NetworkUtils->my_ip_facing($gateway);
+                      my @ipd = xCAT::NetworkUtils->my_ip_facing($gateway);
+                      unless ($ipd[0]) { $ip = $ipd[1];}
                    }else{
                       (undef,$ip) = xCAT::NetworkUtils->gethostnameandip($_);
                    }
@@ -1245,15 +1263,17 @@ sub mkinstall
            }            
 
            
-            if($::XCATSITEVALS{xcatdebugmode} eq "1"){
+            if(($::XCATSITEVALS{xcatdebugmode} eq "1") or ($::XCATSITEVALS{xcatdebugmode} eq "2")){
 
                unless($netserver eq '!myipfn!'){
                   my($host,$ip)=xCAT::NetworkUtils->gethostnameandip($netserver);
                   $netserver=$ip;
                }
               
-              #enable ssh access during installation,the password is set to "cluster"
-              $kcmdline .=" UseSSH=1 SSHPassword=cluster";
+              if($::XCATSITEVALS{xcatdebugmode} eq "2"){
+                 #enable ssh access during installation,the password is set to "cluster"
+                 $kcmdline .=" UseSSH=1 SSHPassword=cluster";
+              }
  
               $kcmdline .=" Loghost=$netserver";
             }
@@ -1314,21 +1334,40 @@ sub mkinstall
                                          kcmdline => $kcmdline
                                         }
                                         );
-            }
-            elsif ($arch =~ /ppc/)
+            } 
+            elsif ($arch eq "ppc64") 
             {
-                $kernelpath = "$rtftppath/inst64";
-                xCAT::MsgUtils->trace($verbose_on_off,"d","sles->mkinstall: kcmdline=$kcmdline kernal=$kernelpath initrd=");
-                $bptab->setNodeAttribs(
-                                        $node,
-                                        {
-                                         kernel   => $kernelpath,
-                                         initrd   => "",
-                                         kcmdline => $kcmdline
-                                        }
-                                        );
+                if(-r "$tftppath/linux64" and -r "$tftppath/initrd64"){
+                    #from sles11.3, suseboot/linux64 and suseboot/initrd64 are used for diskful 
+                    #network installation
+                    #the previous suseboot/inst64 can not be run on Power8 BE
+                    $kernelpath = "$rtftppath/linux64";
+                    $initrdpath = "$rtftppath/initrd64";
+                    xCAT::MsgUtils->trace($verbose_on_off,"d","sles->mkinstall: kcmdline=$kcmdline kernal=$kernelpath initrd=$initrdpath");
+                    $bptab->setNodeAttribs(
+                                            $node,
+                                            {
+                                             kernel   => $kernelpath,
+                                             initrd   => $initrdpath,
+                                             kcmdline => $kcmdline
+                                            }
+                                            );
+                }
+                elsif(-r "$tftppath/inst64"){
+                    #suseboot/inst64 is used for network installation before sles11.3
+                    #suseboot/inst64 can not be run on Power8 BE
+                    $kernelpath = "$rtftppath/inst64";
+                    xCAT::MsgUtils->trace($verbose_on_off,"d","sles->mkinstall: kcmdline=$kcmdline kernal=$kernelpath initrd=");
+                    $bptab->setNodeAttribs(
+                                            $node,
+                                            {
+                                             kernel   => $kernelpath,
+                                             initrd   => "",
+                                             kcmdline => $kcmdline
+                                            }
+                                            );
+                }
             }
-
         }
         else
         {
@@ -1768,8 +1807,15 @@ sub copycd
                                 # only set to $1 if the regex was successful
                                 if ($_ =~ /sles:(\d+),/) {
                                     $distname = "sles".$1;
+                                } elsif ($_ =~ /sles:(\d+):sp(\d+),/) {
+                                    $distname = "sles".$1.".".$2;
+                                } elsif ($_ =~ /Software Development Kit\s*(\d+)\s*SP(\d+)/) {
+                                    $distname = "sles".$1.".".$2;
                                 } elsif ($_ =~ /Software Development Kit\s*(\d+)/) {
                                     $distname = "sles".$1;
+                                    if ($_ =~ /sdk:(\d+):sp(\d+),/) {
+                                        $distname = "sles".$1.".".$2;
+                                    }
                                 }
                             }
                         }

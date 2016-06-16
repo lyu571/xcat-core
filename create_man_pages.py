@@ -80,12 +80,25 @@ def cleanup_db_man_pages_dir():
     shutil.rmtree("perl-xCAT/pods")
     shutil.rmtree("perl-xCAT/share")
 
-   
+def fix_vertical_bar(rst_file):
+    # Verical bar can not appear with spaces around it, otherwise
+    # it gets displayed as a link in .html
+    sed_cmd = "sed 's/\*\*\\\ |\\\ \*\*/ | /g' %s > %s.sed1" %(rst_file, rst_file)
+    os.system(sed_cmd)
+
+def fix_double_dash(rst_file):
+    # -- gets displayed in .html as a sinle long dash, need to insert
+    # a non bold space between 2 dashes
+    sed_cmd = "sed '/\*\*/s/--/-\*\*\\\ \*\*-/g' %s.sed1 > %s" %(rst_file, rst_file)
+    os.system(sed_cmd)
+    #remove intermediate .sed1 file
+    rm_sed1file_cmd = "rm %s.sed1" %(rst_file)
+    os.system(rm_sed1file_cmd)   
 
 build_db_man_pages()
 
 # List the xCAT component directory which contain pod pages
-COMPONENTS = ['xCAT-SoftLayer', 'xCAT-test', 'xCAT-client', 'xCAT-vlan', 'perl-xCAT']
+COMPONENTS = ['xCAT-SoftLayer', 'xCAT-test', 'xCAT-client', 'xCAT-vlan', 'perl-xCAT', 'xCAT-buildkit']
 
 for component in COMPONENTS: 
     for root,dirs,files in os.walk("%s" %(component)):
@@ -117,8 +130,11 @@ for component in COMPONENTS:
                     cmd = "perl -I %s/share/perl5 %s/bin/%s " %(prefix_path, prefix_path, POD2RST)
 
                 cmd += " --infile=%s --outfile=%s --title=%s.%s" %(pod_input, rst_output, title, man_ver)
-                print cmd 
+                # print cmd 
                 os.system(cmd)
+		if man_ver == '1' or man_ver == '8':
+                    fix_vertical_bar(rst_output)
+                    fix_double_dash(rst_output)
 
 cleanup_db_man_pages_dir()
 

@@ -1,3 +1,5 @@
+.. _The_synclist_file:
+
 The synclist file
 -----------------
 
@@ -86,6 +88,23 @@ If the above syncfile is performed by the **updatenode/xdcp** commands, or perfo
        /prog1/conf2(It has the same content with /tmp/prog1/conf2.tmpl on the MN)
        /prog2/conf1(It has the same content with /tmp/prog2/conf1 on the MN)
        /prog2/conf2(It has the same content with /tmp/prog2/conf2 on the MN)
+
+
+Support nodes in synclist file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note: From xCAT 2.9.2 on AIX and from xCAT 2.12 on Linux, xCAT support a new format for syncfile. The new format is  ::
+
+       file -> (noderange for permitted nodes) file
+
+The noderange would have several format. Following examples show that /etc/hosts file is synced to the nodes which is specifed before the file name  ::
+
+       /etc/hosts -> (node1,node2) /etc/hosts            # The /etc/hosts file is synced to node1 and node2
+       /etc/hosts -> (node1-node4) /etc/hosts            # The /etc/hosts file is synced to node1,node2,node3 and node4
+       /etc/hosts -> (node[1-4]) /etc/hosts              # The /etc/hosts file is synced to node1, node2, node3 and node4
+       /etc/hosts -> (node1,node[2-3],node4) /etc/hosts  # The /etc/hosts file is synced to node1, node2, node3 and node4
+       /etc/hosts -> (group1) /etc/hosts                 # The /etc/hosts file is synced to nodes in group1
+       /etc/hosts -> (group1,group2) /etc/hosts          #  The /etc/hosts file is synced to nodes in group1 and group2
 
 postscript support
 ~~~~~~~~~~~~~~~~~~
@@ -205,7 +224,7 @@ If the provisioning method for the node is install,or netboot then the path to t
        <profile>,<os>and <arch> are what you set for the node
 
 For example:
-The location of synclist file for the diskfull installation of <os> with 'compute' as the profile ::
+The location of synclist file for the diskful installation of <os> with 'compute' as the profile ::
 
        /install/custom/<inst_type>/<distro>/<profile>.<os>.synclist
 

@@ -19,7 +19,7 @@ rmzone.1
 ****************
 
 
-\ **rmzone**\  <zonename>  [\ **-g**\ ] [\ **-f**\ ]
+\ **rmzone**\  \ *zonename*\   [\ **-g**\ ] [\ **-f**\ ]
 
 \ **rmzone**\  [\ **-h**\  | \ **-v**\ ]
 
@@ -43,32 +43,32 @@ Note: if any zones in the zone table, there must be one and only one defaultzone
 
 
 
-\ **-h**\ |\ **--help**\ 
+\ **-h | -**\ **-help**\ 
  
  Displays usage information.
  
 
 
-\ **-v**\ |\ **--version**\ 
+\ **-v | -**\ **-version**\ 
  
  Displays command version and build date.
  
 
 
-\ **-f | --force**\ 
+\ **-f | -**\ **-force**\ 
  
  Used to remove a zone that is defined as current default zone.  This should only be done if you are removing all zones, or you will
  adding a new zone or changing an existing zone to be the default zone.
  
 
 
-\ **-g | --assigngroup**\ 
+\ **-g | -**\ **-assigngroup**\ 
  
  Remove the assigned group named \ **zonename**\  from all nodes assigned to the zone being removed.
  
 
 
-\ **-V**\ |\ **--Verbose**\ 
+\ **-V | -**\ **-Verbose**\ 
  
  Verbose mode.
  
@@ -81,27 +81,37 @@ Note: if any zones in the zone table, there must be one and only one defaultzone
 
 
 
-\*
+1. To remove zone1 from the zone table and the zonename attribute on all it's assigned nodes , enter:
  
- To remove zone1 from the zone table and the zonename attribute on all it's assigned nodes , enter:
  
- \ **rmzone**\  \ *zone1*\ 
+ .. code-block:: perl
+ 
+   rmzone zone1
+ 
  
 
 
-\*
+2.
  
  To remove zone2 from the zone table, the zone2 zonename attribute, and the zone2 group assigned to all nodes that were in zone2, enter:
  
- \ **rmzone**\  \ *zone2*\  -g
+ 
+ .. code-block:: perl
+ 
+   rmzone zone2 -g
+ 
  
 
 
-\*
+3.
  
  To remove zone3 from the zone table, all the node zone attributes and  override the fact it is the defaultzone,  enter:
  
- \ **rmzone**\  \ *zone3*\  -g -f
+ 
+ .. code-block:: perl
+ 
+   rmzone zone3 -g -f
+ 
  
 
 

@@ -19,9 +19,9 @@ SYNOPSIS
 ********
 
 
-\ **rmkit**\  [\ **-?**\ |\ **-h**\ |\ **--help**\ ] [\ **-v**\ |\ **--version**\ ]
+\ **rmkit**\  [\ **-? | -h | -**\ **-help**\ ] [\ **-v | -**\ **-version**\ ]
 
-\ **rmkit**\  [\ **-V**\ |\ **--verbose**\ ] [\ **-f**\ |\ **--force**\ ] [\ **-t**\ |\ **--test**\ ] \ *kitlist*\ 
+\ **rmkit**\  [\ **-V | -**\ **-verbose**\ ] [\ **-f | -**\ **-force**\ ] [\ **-t | -**\ **-test**\ ] \ *kitlist*\ 
 
 
 ***********
@@ -40,37 +40,37 @@ OPTIONS
 
 
 
-\ **-h|--help**\ 
+\ **-h|-**\ **-help**\ 
  
  Display usage message.
  
 
 
-\ **-V|--verbose**\ 
+\ **-V|-**\ **-verbose**\ 
  
  Verbose mode.
  
 
 
-\ **-v|--version**\ 
+\ **-v|-**\ **-version**\ 
  
  Command version.
  
 
 
-\ **-f|--force**\ 
+\ **-f|-**\ **-force**\ 
  
  Remove this kit even there is any component in this kit is listed by osimage.kitcomponents.  If this option is not specified, this kit will not be removed if any kit components listed in an osimage.kitcomponents
  
 
 
-\ **-t|--test**\ 
+\ **-t|-**\ **-test**\ 
  
  Test if kitcomponents in this kit are used by osimage
  
 
 
-\ **kitlist**\ 
+\ *kitlist*\ 
  
  A comma delimited list of kits that are to be removed from the xCAT cluster.  Each entry can be a kitname or kit basename. For kit basename, rmkit command will remove all the kits that have that kit basename.
  
@@ -94,28 +94,52 @@ EXAMPLES
 
 1. To remove two kits from tarball files.
 
-rmkit kit-test1,kit-test2
+
+.. code-block:: perl
+
+  rmkit kit-test1,kit-test2
+
 
 Output is similar to:
 
-Kit kit-test1-1.0-Linux,kit-test2-1.0-Linux was successfully removed.
+
+.. code-block:: perl
+
+  Kit kit-test1-1.0-Linux,kit-test2-1.0-Linux was successfully removed.
+
 
 2. To remove two kits from tarball files even the kit components in them are still being used by osimages.
 
-rmkit kit-test1,kit-test2 --force
+
+.. code-block:: perl
+
+  rmkit kit-test1,kit-test2 --force
+
 
 Output is similar to:
 
-Kit kit-test1-1.0-Linux,kit-test2-1.0-Linux was successfully removed.
+
+.. code-block:: perl
+
+  Kit kit-test1-1.0-Linux,kit-test2-1.0-Linux was successfully removed.
+
 
 3. To list kitcomponents in this kit used by osimage
 
-rmkit kit-test1,kit-test2 -t
+
+.. code-block:: perl
+
+  rmkit kit-test1,kit-test2 -t
+
 
 Output is similar to:
 
-kit-test1-kitcomp-1.0-Linux is being used by osimage osimage-test
-Following kitcomponents are in use: kit-test1-kitcomp-1.0-Linux
+
+.. code-block:: perl
+
+  kit-test1-kitcomp-1.0-Linux is being used by osimage osimage-test
+  Following kitcomponents are in use: kit-test1-kitcomp-1.0-Linux
+
 
 
 ********
@@ -124,6 +148,4 @@ SEE ALSO
 
 
 lskit(1)|lskit.1, addkit(1)|addkit.1, addkitcomp(1)|addkitcomp.1, rmkitcomp(1)|rmkitcomp.1, chkkitcomp(1)|chkkitcomp.1
-
-~
 

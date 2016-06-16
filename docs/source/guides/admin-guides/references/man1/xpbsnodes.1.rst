@@ -19,16 +19,17 @@ SYNOPSIS
 ********
 
 
-\ **xpbsnodes**\  [{\ **noderange**\ }] [{\ **offline**\ |\ **clear**\ |\ **stat**\ |\ **state**\ }]
+\ **xpbsnodes**\  [{\ *noderange*\ }] [{\ **offline | clear | stat | state**\ }]
 
-\ **xpbsnodes**\  [\ **-h**\ |\ **--help**\ ] [\ **-v**\ |\ **--version**\ ]
+\ **xpbsnodes**\  [\ **-h | -**\ **-help**\ ] [\ **-v | -**\ **-version**\ ]
 
 
-*******************************************************************************************************
+***********
 DESCRIPTION
-\ **xpbsnodes**\  is a front-end to PBS pbsnode but uses xCAT's noderange to specify nodes.
-*******************************************************************************************************
+***********
 
+
+\ **xpbsnodes**\  is a front-end to PBS pbsnode but uses xCAT's noderange to specify nodes.
 
 
 *******
@@ -36,9 +37,9 @@ OPTIONS
 *******
 
 
-\ **-h**\                Display usage message.
+\ **-h|-**\ **-help**\                Display usage message.
 
-\ **-v**\                Command Version.
+\ **-v|-**\ **-version**\                Command Version.
 
 \ **offline|off**\       Take nodes offline.
 

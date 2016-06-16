@@ -1,5 +1,3 @@
-.. _deploy_os:
-
 Initialize the Compute for Deployment
 =====================================
 
@@ -11,7 +9,7 @@ There are more attributes of nodeset used for some specific purpose or specific 
 
 * **runimage**: If you would like to run a task after deployment, you can define that task with this attribute.
 * **runcmd**: This instructs the node to boot to the xCAT nbfs environment and proceed to configure BMC for basic remote access.  This causes the IP, netmask, gateway, username, and password to be programmed according to the configuration table.
-* **shell**: This instructs tho node to boot to the xCAT genesis environment, and present a shell prompt on console.  The node will also be able to be sshed into and have utilities such as wget, tftp, scp, nfs, and cifs.  It will have storage drivers available for many common systems.
+* **shell**: This instructs the node to boot to the xCAT genesis environment, and present a shell prompt on console.  The node will also be able to be sshed into and have utilities such as wget, tftp, scp, nfs, and cifs.  It will have storage drivers available for many common systems.
 
 Choose such additional attribute of nodeset according to your requirement, if want to get more informantion about nodeset, refer to nodeset's man page.
 
@@ -33,6 +31,4 @@ For **x86_64 servers**, those two operations need two independent commands.
     #. Reboot the xSeries server: :::
 
         rpower <node> reset
-
-	
 

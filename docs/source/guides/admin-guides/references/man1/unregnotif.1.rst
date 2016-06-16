@@ -19,11 +19,11 @@ SYNOPSIS
 ********
 
 
-\ *unregnotif [-h| --help]*\ 
+\ **unregnotif [-h| -**\ **-help]**\ 
 
-\ *unregnotif  [-v| --version]*\ 
+\ **unregnotif [-v| -**\ **-version]**\ 
 
-\ *unregnotif  \ \*filename\*\ *\ 
+\ **unregnotif**\  \ *filename*\ 
 
 
 ***********
@@ -35,7 +35,7 @@ This command is used to unregistered a Perl module or a command that was watchin
 
 
 **********
-Parameters
+PARAMETERS
 **********
 
 
@@ -49,7 +49,7 @@ OPTIONS
 
 \ **-h | -help**\           Display usage message.
 
-\ **-v | -version **\       Command Version.
+\ **-v | -version**\       Command Version.
 
 \ **-V | -verbose**\        Verbose output.
 

@@ -21,7 +21,7 @@ SYNOPSIS
 
 \ **replaycons**\  [\ *node*\ ] [\ *bps*\ ] [\ *tail_amount*\ ]
 
-\ **replaycons**\  [\ **-h**\  | \ **--help**\  | \ **-v**\  | \ **--version**\ ]
+\ **replaycons**\  [\ **-h**\  | \ **-**\ **-help**\  | \ **-v**\  | \ **-**\ **-version**\ ]
 
 
 ***********
@@ -43,7 +43,7 @@ OPTIONS
 
 
 
-\ *bps*\ ]
+\ *bps*\ 
  
  The display rate to use to play back the console output.  Default is 19200.
  
@@ -55,13 +55,13 @@ OPTIONS
  
 
 
-\ **-v|--version**\ 
+\ **-v|-**\ **-version**\ 
  
  Command Version.
  
 
 
-\ **-h|--help**\ 
+\ **-h|-**\ **-help**\ 
  
  Display usage message.
  
@@ -74,16 +74,12 @@ RETURN VALUE
 
 
 
-0
- 
- The command completed successfully.
- 
+0 The command completed successfully.
 
 
-1
- 
- An error has occurred.
- 
+
+1 An error has occurred.
+
 
 
 

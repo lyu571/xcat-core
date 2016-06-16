@@ -6,7 +6,7 @@ By default, xCAT will install the operating system on the first disk and with de
 
 - 'Partition definition file' way can be used for RedHat, SLES and Ubuntu.
 - 'partition definition script' way was tested only for RedHat and Ubuntu, use this feature on SLES at your own risk.
-- Because disk configuration for ubuntu is different from Redhat, there maybe some section special for ubuntu.
+- Because disk configuration for ubuntu is different from RedHat, there maybe some section special for ubuntu.
 
 .. END_Overview
 
@@ -356,7 +356,7 @@ Run the following commands to associate the partition with the osimage: ::
       chdef -t osimage <osimagename> partitionfile=/install/custom/my-partitions
       nodeset <nodename> osimage=<osimage>
 
-- For Redhat, when nodeset runs and generates the /install/autoinst file for a node, it will replace the #XCAT_PARTITION_START#...#XCAT_PARTITION_END# directives from your osimage template with the contents of your custom partitionfile.
+- For RedHat, when nodeset runs and generates the /install/autoinst file for a node, it will replace the #XCAT_PARTITION_START#...#XCAT_PARTITION_END# directives from your osimage template with the contents of your custom partitionfile.
 
 - For Ubuntu, when nodeset runs and generates the /install/autoinst file for a node, it will generate a script to write the partition configuration to /tmp/partitionfile, this script will replace the #XCA_PARTMAN_RECIPE_SCRIPT# directive in /install/autoinst/<node>.pre. 
 
@@ -365,7 +365,7 @@ Run the following commands to associate the partition with the osimage: ::
 
 .. BEGIN_Partition_Definition_Script_overview
 
-Create a shell script that will be run on the node during the install process to dynamically create the disk partitioning definition. This script will be run during the OS installer %pre script on Redhat or preseed/early_command on Unbuntu execution and must write the correct partitioning definition into the file /tmp/partitionfile on the node 
+Create a shell script that will be run on the node during the install process to dynamically create the disk partitioning definition. This script will be run during the OS installer %pre script on RedHat or preseed/early_command on Unbuntu execution and must write the correct partitioning definition into the file /tmp/partitionfile on the node 
 
 .. END_Partition_Definition_Script_overview
 
@@ -379,7 +379,7 @@ The purpose of the partition script is to create the /tmp/partionfile that will 
 
 .. BEGIN_Partition_Definition_Script_Create_partition_script_example_redhat_sles
 
-Here is an example of the partition script on Redhat and SLES, the partitioning script is ``/install/custom/my-partitions.sh``: ::
+Here is an example of the partition script on RedHat and SLES, the partitioning script is ``/install/custom/my-partitions.sh``: ::
 
     instdisk="/dev/sda"
 
@@ -448,7 +448,7 @@ Run below commands to associate partition script with osimage: ::
         nodeset <nodename> osimage=<osimage>
 
     - The "s:" preceding the filename tells nodeset that this is a script.
-    - For Redhat, when nodeset runs and generates the /install/autoinst file for a node, it will add the execution of the contents of this script to the %pre section of that file. The nodeset command will then replace the #XCAT_PARTITION_START#...#XCAT_PARTITION_END# directives from the osimage template file with "%include /tmp/partitionfile" to dynamically include the tmp definition file your script created.
+    - For RedHat, when nodeset runs and generates the /install/autoinst file for a node, it will add the execution of the contents of this script to the %pre section of that file. The nodeset command will then replace the #XCAT_PARTITION_START#...#XCAT_PARTITION_END# directives from the osimage template file with "%include /tmp/partitionfile" to dynamically include the tmp definition file your script created.
     - For Ubuntu, when nodeset runs and generates the /install/autoinst file for a node, it will replace the "#XCA_PARTMAN_RECIPE_SCRIPT#" directive and add the execution of the contents of this script to the /install/autoinst/<node>.pre, the /install/autoinst/<node>.pre script will be run in the preseed/early_command.
 
 .. END_Partition_Definition_Script_Associate_partition_script_with_osimage_common
@@ -467,13 +467,13 @@ If not specified, the default value will be used.
     nodeset <nodename> osimage=<osimage>
 
 - the 'd:' preceding the filename tells nodeset that this is a partition disk file.
-- For Ubuntu, when nodeset runs and generates the /install/autoinst file for a node, it will generate a script to write the content of the partition disk file to /tmp/boot_disk, this context to run the script will replace the #XCA_PARTMAN_DISK_SCRIPT# directive in /install/autoinst/<node>.pre. 
+- For Ubuntu, when nodeset runs and generates the /install/autoinst file for a node, it will generate a script to write the content of the partition disk file to /tmp/install_disk, this context to run the script will replace the #XCA_PARTMAN_DISK_SCRIPT# directive in /install/autoinst/<node>.pre. 
 
 .. END_Partition_Disk_File_ubuntu_only
 
 .. BEGIN_Partition_Disk_Script_ubuntu_only
 
-The disk script contains a script to generate a partitioning disk file named "/tmp/boot_disk". for example: ::
+The disk script contains a script to generate a partitioning disk file named "/tmp/install_disk". for example: ::
 
     rm /tmp/devs-with-boot 2>/dev/null || true; 
     for d in $(list-devices partition); do 
@@ -486,12 +486,12 @@ The disk script contains a script to generate a partitioning disk file named "/t
         fi 
     done; 
     if [[ -e /tmp/devs-with-boot ]]; then 
-        head -n1 /tmp/devs-with-boot | egrep  -o '\S+[^0-9]' > /tmp/boot_disk; 
+        head -n1 /tmp/devs-with-boot | egrep  -o '\S+[^0-9]' > /tmp/install_disk; 
         rm /tmp/devs-with-boot 2>/dev/null || true; 
     else 
         DEV=`ls /dev/disk/by-path/* -l | egrep -o '/dev.*[s|h|v]d[^0-9]$' | sort -t : -k 1 -k 2 -k 3 -k 4 -k 5 -k 6 -k 7 -k 8 -g | head -n1 | egrep -o '[s|h|v]d.*$'`; 
         if [[ "$DEV" == "" ]]; then DEV="sda"; fi; 
-        echo "/dev/$DEV" > /tmp/boot_disk; 
+        echo "/dev/$DEV" > /tmp/install_disk; 
     fi;
 
 If not specified, the default value will be used.

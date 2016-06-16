@@ -19,7 +19,7 @@ sinv.1
 ****************
 
 
-\ **sinv**\   [\ **-o**\  \ *output*\ ] [\ **-p**\  \ *template path*\ ] [\ **-t**\  \ *template count*\ ] [\ **-s**\  \ *seed node*\ ] [\ **-i**\ ] [\ **-e**\ ] [\ **-r**\ ] [\ **-V**\ ] [\ **--devicetype**\  \ *type_of_device*\ ]  [\ **-l**\   \ *userID*\ ] [[\ **-f**\  \ *command file*\ ] | [\ **-c**\  \ *command*\ ]]
+\ **sinv**\   [\ **-o**\  \ *output*\ ] [\ **-p**\  \ *template path*\ ] [\ **-t**\  \ *template count*\ ] [\ **-s**\  \ *seed node*\ ] [\ **-i**\ ] [\ **-e**\ ] [\ **-r**\ ] [\ **-V**\ ] [\ **-**\ **-devicetype**\  \ *type_of_device*\ ]  [\ **-l**\   \ *userID*\ ] [[\ **-f**\  \ *command file*\ ] | [\ **-c**\  \ *command*\ ]]
 
 \ **sinv**\  [\ **-h**\  | \ **-v**\ ]
 
@@ -40,8 +40,7 @@ The \ **sinv**\  command is an xCAT Distributed Shell Utility.
 
 \ **COMMAND**\  \ **SPECIFICATION**\ :
 
-The xdsh or rinv command to execute on the remote targets is specified by the
- \ **-c**\  flag, or by the \ **-f**\  flag
+The xdsh or rinv command to execute on the remote targets is specified by the \ **-c**\  flag, or by the \ **-f**\  flag
 which is followed by the fully qualified path to a file containing the command.
 
 Note: do not add | xdshcoll to the command on the command line or in the
@@ -73,14 +72,14 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
 
 
 
-\ **-o**\ |\ **--output**\  \ *report output file*\ 
+\ **-o | -**\ **-output**\  \ *report output file*\ 
  
  Optional output file. This is the location of the file that will contain the report of the nodes that match, and do not match, the input templates.
  If the flag is not used, the output will go to stdout.
  
 
 
-\ **-p**\ |\ **--tp**\  \ *template path*\ 
+\ **-p | -**\ **-tp**\  \ *template path*\ 
  
  This is the path to the template file. The template contains the output
  of xdsh command, that has been run against a "seed" node, a node 
@@ -104,7 +103,7 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **-t**\ |\ **--tc**\  \ *template count*\ 
+\ **-t | -**\ **-tc**\  \ *template count*\ 
  
  This count is the number of templates that the command will use
  to check for nodes matches.  If the template in the template path does not
@@ -122,7 +121,7 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **-s**\ |\ **--seed**\  \ *seed node*\ 
+\ **-s | -**\ **-seed**\  \ *seed node*\ 
  
  This is the node that will be used to build the first template
  that is stored in template path.  You can use this parameter instead of running
@@ -134,7 +133,7 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **-i**\ |\ **--ignorefirst**\ 
+\ **-i | -**\ **-ignorefirst**\ 
  
  This flag suppresses the reporting of the nodes matching the first
  template. In very large systems, you may not want to show the nodes that
@@ -144,7 +143,7 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **-e**\ |\ **--exactmatch**\ 
+\ **-e | -**\ **-exactmatch**\ 
  
  This requires the check of node output against template to be an exact match.
  If this flag is not set, \ **sinv**\  checks to see if the return from the 
@@ -160,7 +159,7 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **--devicetype**\  \ *type_of_device*\ 
+\ **-**\ **-devicetype**\  \ *type_of_device*\ 
  
  Specify a user-defined device type that references the location
  of relevant device configuration file. The devicetype value must
@@ -178,13 +177,13 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **-l**\ |\ **--user**\  \ *user_ID*\ 
+\ **-l | -**\ **-user**\  \ *user_ID*\ 
  
  Specifies a remote user name to use for remote command execution.
  
 
 
-\ **-c**\ |\ **--command**\ 
+\ **-c | -**\ **-command**\ 
  
  The xdsh or rinv command that will be run. The command should be enclosed in 
  double quotes to insure correct shell interpretation. This parameter must only contain, the node range or the image path (Linux) or spot name for AIX. It cannot be used to set additional input flags to xdsh or rinv (for example -s,-T,-e).  See examples below.
@@ -194,7 +193,7 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **-f**\ |\ **--file**\ 
+\ **-f | -**\ **-file**\ 
  
  The file containing the xdsh or rinv command that will be run. 
  This should be the fully qualified name of the file.
@@ -204,7 +203,7 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **-r**\ |\ **--remove**\ 
+\ **-r | -**\ **-remove**\ 
  
  This flag indicates that generated templates should be removed at the
  at the end of the \ **sinv**\  command execution.
@@ -218,19 +217,19 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
  
 
 
-\ **-h**\ |\ **--help**\ 
+\ **-h | -**\ **-help**\ 
  
  Displays usage information.
  
 
 
-\ **-v**\ |\ **--version**\ 
+\ **-v | -**\ **-version**\ 
  
  Displays xCAT release version.
  
 
 
-\ **-V**\ |\ **--Verbose**\ 
+\ **-V | -**\ **-Verbose**\ 
  
  Verbose mode.
  
@@ -243,101 +242,121 @@ Command Protocol can be used. See man \ **xdsh**\  for more details.
 
 
 
-\*
+1. To setup sinv.template (name optional) for input to the \ **sinv**\  command , enter:
  
- To setup sinv.template (name optional) for input to the \ **sinv**\  command , enter:
  
- \ **xdsh**\  \ *node1,node2 "rpm -qa | grep ssh " | xdshcoll  > /tmp/sinv.template*\ 
+ .. code-block:: perl
  
- Note: when setting up the template the output of xdsh must be piped
- 	  to xdshcoll, sinv processing depends on it.
+   xdsh node1,node2 "rpm -qa | grep ssh " | xdshcoll  > /tmp/sinv.template
  
-
-
-\*
  
- To setup rinv.template for input to the \ **sinv**\  command , enter:
- 
- \ **rinv**\  \ *node1-node2 serial | xdshcoll  > /tmp/rinv.template*\ 
- 
- Note: when setting up the template the output of rinv must be piped
- 	  to xdshcoll, sinv processing depends on it.
+ Note: when setting up the template the output of xdsh must be piped to xdshcoll, sinv processing depends on it.
  
 
 
-\*
+2. To setup rinv.template for input to the \ **sinv**\  command , enter:
  
- To execute \ **sinv**\  using the sinv.template generated above
- on the nodegroup, \ **testnodes**\  ,possibly generating up to two
- new templates, and removing all generated templates in the end, and writing
- output report to /tmp/sinv.output, enter:
  
- \ **sinv**\  \ * -c "xdsh testnodes rpm -qa | grep ssh" -p /tmp/sinv.template -t 2 -r -o /tmp/sinv.output*\ 
+ .. code-block:: perl
  
- Note: do not add the pipe to xdshcoll on the -c flag, it is automatically
- added by the sinv routine.
+   rinv node1-node2 serial | xdshcoll  > /tmp/rinv.template
+ 
+ 
+ Note: when setting up the template the output of rinv must be piped to xdshcoll, sinv processing depends on it.
  
 
 
-\*
+3. To execute \ **sinv**\  using the sinv.template generated above
+on the nodegroup, \ **testnodes**\  ,possibly generating up to two
+new templates, and removing all generated templates in the end, and writing
+output report to /tmp/sinv.output, enter:
  
- To execute \ **sinv**\  on noderange, node1-node4, using the seed node, node8,
- to generate the first template, using the xdsh command (-c),
- possibly generating up to two additional
- templates and not removing any templates at the end, enter:
  
- \ **sinv**\  \ *-c "xdsh node1-node4 lslpp -l | grep bos.adt" -s node8 -p /tmp/sinv.template -t 2 -o /tmp/sinv.output*\ 
+ .. code-block:: perl
  
-
-
-\*
+   sinv -c "xdsh testnodes rpm -qa | grep ssh" -p /tmp/sinv.template -t 2 -r -o /tmp/sinv.output
  
- To execute \ **sinv**\  on noderange, node1-node4, using the seed node, node8,
- to generate the first template, using the rinv command (-c),
- possibly generating up to two additional
- templates and removing any generated templates at the end, enter:
  
- \ **sinv**\  \ *-c "rinv node1-node4 serial" -s node8 -p /tmp/sinv.template -t 2 -r -o /tmp/rinv.output*\ 
+ Note: do not add the pipe to xdshcoll on the -c flag, it is automatically added by the sinv routine.
  
 
 
-\*
+4. To execute \ **sinv**\  on noderange, node1-node4, using the seed node, node8,
+to generate the first template, using the xdsh command (-c),
+possibly generating up to two additional
+templates and not removing any templates at the end, enter:
  
- To execute \ **sinv**\  on noderange, node1-node4, using node1 as
- the seed node, to generate the sinv.template from the xdsh command (-c),
- using the exact match option, generating no additional templates, enter:
  
- \ **sinv**\  \ *-c "xdsh node1-node4 lslpp -l | grep bos.adt"  -s node1 -e -p /tmp/sinv.template  -o /tmp/sinv.output*\ 
+ .. code-block:: perl
+ 
+   sinv -c "xdsh node1-node4 lslpp -l | grep bos.adt" -s node8 -p /tmp/sinv.template -t 2 -o /tmp/sinv.output
+ 
+ 
+
+
+5. To execute \ **sinv**\  on noderange, node1-node4, using the seed node, node8,
+to generate the first template, using the rinv command (-c),
+possibly generating up to two additional
+templates and removing any generated templates at the end, enter:
+ 
+ 
+ .. code-block:: perl
+ 
+   sinv -c "rinv node1-node4 serial" -s node8 -p /tmp/sinv.template -t 2 -r -o /tmp/rinv.output
+ 
+ 
+
+
+6. To execute \ **sinv**\  on noderange, node1-node4, using node1 as
+the seed node, to generate the sinv.template from the xdsh command (-c),
+using the exact match option, generating no additional templates, enter:
+ 
+ 
+ .. code-block:: perl
+ 
+   sinv -c "xdsh node1-node4 lslpp -l | grep bos.adt" -s node1 -e -p /tmp/sinv.template  -o /tmp/sinv.output
+ 
  
  Note: the /tmp/sinv.template file must be empty, otherwise it will be used
  as an admin generated template.
  
 
 
-\*
+7. To execute \ **sinv**\  on the Linux osimage defined for cn1.  First build a template from the /etc/hosts on the node. Then run sinv to compare.
  
- To execute \ **sinv**\  on the Linux osimage defined for cn1.  First build a template from the /etc/hosts on the node. Then run sinv to compare. 
- \ **xdsh**\  \ *cn1 "cat /etc/hosts" | xdshcoll *\  /tmp/sinv2/template"
  
- \ **sinv**\  \ *-c "xdsh -i /install/netboot/rhels6/ppc64/test_ramdisk_statelite/rootimg cat /etc/hosts"  -e -t1 -p /tmp/sinv.template  -o /tmp/sinv.output*\ 
+ .. code-block:: perl
+ 
+   xdsh cn1 "cat /etc/hosts" | xdshcoll > /tmp/sinv2/template"
+  
+   sinv -c "xdsh -i /install/netboot/rhels6/ppc64/test_ramdisk_statelite/rootimg cat /etc/hosts" -e -t1 -p /tmp/sinv.template -o /tmp/sinv.output
+ 
  
 
 
-\*
+8.
  
  To execute \ **sinv**\  on the AIX NIM 611dskls spot and compare /etc/hosts to compute1 node, run the following:
  
- \ **xdsh**\  \ *compute1 "cat /etc/hosts" | xdshcoll *\  /tmp/sinv2/template"
  
- \ **sinv**\  \ *-c "xdsh -i 611dskls  cat /etc/hosts" -e -t1 -p /tmp/sinv.template  -o /tmp/sinv.output*\ 
+ .. code-block:: perl
+ 
+   xdsh compute1 "cat /etc/hosts" | xdshcoll > /tmp/sinv2/template"
+  
+   sinv -c "xdsh -i 611dskls cat /etc/hosts" -e -t1 -p /tmp/sinv.template -o /tmp/sinv.output
+ 
  
 
 
-\*
+9.
  
  To execute \ **sinv**\  on the device mswitch2 and compare to mswitch1
  
- \ **sinv**\  \ *-c "xdsh mswitch  enable;show version"  -s mswitch1 -p /tmp/sinv/template --devicetype IBSwitch::Mellanox -l admin -t 2*\ 
+ 
+ .. code-block:: perl
+ 
+   sinv -c "xdsh mswitch  enable;show version" -s mswitch1 -p /tmp/sinv/template --devicetype IBSwitch::Mellanox -l admin -t 2
+ 
  
 
 

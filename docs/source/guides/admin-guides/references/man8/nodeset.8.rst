@@ -19,11 +19,13 @@ Name
 ****************
 
 
-\ **nodeset**\  [\ *noderange*\ ] [\ *boot*\ |\ *stat*\ |\ *iscsiboot*\ |\ *offline*\ |\ *runcmd=bmcsetup*\ |\ *osimage[=<imagename*\ >]|\ *shell*\ |\ *shutdown*\ ]
+\ **nodeset**\  \ *noderange*\  [\ **boot**\  | \ **stat**\  | \ **iscsiboot**\  | \ **offline**\  | \ **runcmd=bmcsetup**\  | \ **osimage**\ [=\ *imagename*\ ] | \ **shell**\  | \ **shutdown**\ ]
 
-\ **nodeset**\  \ *noderange*\  \ *osimage=<imagename*\ > [\ *--noupdateinitrd*\ ] [\ *--ignorekernelchk*\ ]
+\ **nodeset**\  \ *noderange*\  \ **osimage**\ [=\ *imagename*\ ] [\ **-**\ **-noupdateinitrd**\ ] [\ **-**\ **-ignorekernelchk**\ ]
 
-\ **nodeset**\  [\ *-h*\ |\ *--help*\ |\ *-v*\ |\ *--version*\ ]
+\ **nodeset**\  \ *noderange*\  \ **runimage=**\ \ *task*\ 
+
+\ **nodeset**\  [\ **-h | -**\ **-help | -v | -**\ **-version**\ ]
 
 
 *******************
@@ -51,7 +53,7 @@ Assume that /tftpboot is the root for tftpd (set in site(5)|site.5).
 \ **nodeset**\   is  called  by rinstall and winstall and is also called by the
 installation process remotely to set the boot state back to "boot".
 
-A user can supply their own scripts to be run on the mn or on the service node (if a hierarchical cluster) for a node when the nodeset command is run. Such scripts are called \ **prescripts**\ . They should be copied to /install/prescripts dirctory. A table called \ *prescripts*\  is used to specify the scripts and their associated actions. The scripts to be run at the beginning of the nodeset command are stored in the 'begin' column of \ *prescripts*\  table. The scripts to be run at the end of the nodeset command are stored in the 'end' column of \ *prescripts*\  table. You can run 'tabdump prescripts -d' command for details. The following two environment variables will be passed to each script: NODES contains all the names of the nodes that need to run the script for and ACTION contains the current nodeset action. If \ *#xCAT setting:MAX_INSTANCE=number*\  is specified in the script, the script will get invoked for each node in parallel, but no more than \ *number*\  of instances will be invoked at at a time. If it is not specified, the script will be invoked once for all the nodes.
+A user can supply their own scripts to be run on the mn or on the service node (if a hierarchical cluster) for a node when the nodeset command is run. Such scripts are called \ **prescripts**\ . They should be copied to /install/prescripts dirctory. A table called \ *prescripts*\  is used to specify the scripts and their associated actions. The scripts to be run at the beginning of the nodeset command are stored in the 'begin' column of \ *prescripts*\  table. The scripts to be run at the end of the nodeset command are stored in the 'end' column of \ *prescripts*\  table. You can run 'tabdump -d prescripts' command for details. The following two environment variables will be passed to each script: NODES contains all the names of the nodes that need to run the script for and ACTION contains the current nodeset action. If \ *#xCAT setting:MAX_INSTANCE=number*\  is specified in the script, the script will get invoked for each node in parallel, but no more than \ *number*\  of instances will be invoked at at a time. If it is not specified, the script will be invoked once for all the nodes.
 
 
 ***************
@@ -72,26 +74,26 @@ A user can supply their own scripts to be run on the mn or on the service node (
  
 
 
-\ **osimage**\ |\ **osimage=<imagename**\ >
+\ **osimage | osimage=**\ \ *imagename*\ 
  
  Prepare server for installing a node using the specified os image. The os image is defined in the \ *osimage*\  table and \ *linuximage*\  table. If the <imagename> is omitted, the os image name will be obtained from \ *nodetype.provmethod*\  for the node.
  
 
 
-\ **--noupdateinitrd**\ 
+\ **-**\ **-noupdateinitrd**\ 
  
  Skip the rebuilding of initrd when the 'netdrivers', 'drvierupdatesrc' or 'osupdatename' were set for injecting new drviers to initrd. But, the geninitrd command
  should be run to rebuild the initrd for new drivers injecting. This is used to improve the performance of nodeset command.
  
 
 
-\ **--ignorekernelchk**\ 
+\ **-**\ **-ignorekernelchk**\ 
  
  Skip the kernel version checking when injecting drivers from osimage.driverupdatesrc. That means all drivers from osimage.driverupdatesrc will be injected to initrd for the specific target kernel.
  
 
 
-\ **runimage**\ =<task>>
+\ **runimage**\ =\ *task*\ 
  
  If you would like to run a task after deployment, you can define that task with this attribute.
  
@@ -123,13 +125,13 @@ A user can supply their own scripts to be run on the mn or on the service node (
  
 
 
-\ **-h**\ |\ **--help**\ 
+\ **-h | -**\ **-help**\ 
  
  Print help.
  
 
 
-\ **-v**\ |\ **--version**\ 
+\ **-v | -**\ **-version**\ 
  
  Print version.
  
@@ -163,19 +165,23 @@ root directory and the TFTP xCAT  subdirectory.   /tftpboot  and
 
 
 
-\*
+1. To setup to install mycomputeimage on the compute node group.
  
- To setup to install mycomputeimage on the compute node group.
  
- nodeset compute osimage=mycomputeimage
+ .. code-block:: perl
+ 
+   nodeset compute osimage=mycomputeimage
+ 
  
 
 
-\*
+2. To run http://$master/image.tgz  after deployment:
  
- To run http://$master/image.tgz  after deployment:
  
- nodeset $node runimage=http://$MASTER/image.tgznodeset
+ .. code-block:: perl
+ 
+   nodeset $node runimage=http://$MASTER/image.tgz
+ 
  
 
 

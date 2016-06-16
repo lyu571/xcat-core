@@ -40,7 +40,7 @@ This document describes how to install and configure a template node (called gol
 Prepare the xCAT Management Node for Support Sysclone
 `````````````````````````````````````````````````````
 
-How to configure xCAT management node please refer to section :ref:`Install Guides <install_guides>`
+How to configure xCAT management node please refer to section :ref:`install_guides`
 
 For support Sysclone, we need to install some extra rpms on management node and the golden client.
 
@@ -93,7 +93,7 @@ Install and Configure the Golden Client
 	
 The Golden Client acts as a regular node for xCAT, just have some extra rpms to support clone. When you deploy golden client with xCAT, you just need to add a few additional definitions to the image which will be used to deploy golden client.
 
-For information of how to install a regular node, please refer to section :ref:`Diskful Installation <diskfull_installation>`
+For information of how to install a regular node, please refer to section :ref:`Diskful Installation <diskful_installation>`
 
 For support clone, add 'otherpkglist' and 'otherpkgdir' attributes to the image definition which will be used to deploy golden client, then deploy golden client as normal. then the golden client will have extra rpms to support clone. If you have deployed your golden client already, using 'updatenode' command to push these extra rpms to golden client. CentOS share the same pkglist file with RHEL. For example: 
 
@@ -126,14 +126,12 @@ For support clone, add 'otherpkglist' and 'otherpkgdir' attributes to the image 
 Capture Image from Golden Client
 ````````````````````````````````
 
-On Management node, use xCAT command 'imgcapture' to capture an image from the golden-client. 
+On Management node, use xCAT command 'imgcapture' to capture an image from the golden-client.:: 
 
-::
     imgcapture <golden-client> -t sysclone -o <mycomputeimage>
 
-When imgcapture is running, it pulls the image from the golden-client, and creates a image files system and a corresponding osimage definition on the xcat management node. You can use below command to check the osimage attributes.
+When imgcapture is running, it pulls the image from the golden-client, and creates a image files system and a corresponding osimage definition on the xcat management node. You can use below command to check the osimage attributes.::
 
-::
     lsdef -t osimage <mycomputeimage>
 
 Install the target nodes with the image from the golden-client
@@ -152,7 +150,8 @@ following below commands to install the target nodes with the image captured fro
     nodeset <target-node> osimage=<mycomputeimage>
     rnetboot <target-node>
 
-	
+.. _update-node-later-on:
+
 Update Nodes Later On
 ---------------------
 

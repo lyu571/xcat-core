@@ -69,7 +69,54 @@ my $noupdate;
 
 sub xdie {
    system("rm -rf /tmp/xcatinitrd.$$");
+   umount_chroot($rootimage_dir);
    die @_;
+}
+
+
+#helper subroutine to get the major release number 
+#of a osver
+sub majversion {
+    my $version = shift;
+    my $majorrel;
+
+    if($osver =~ /^\D*(\d*)[.\d]*$/){
+        $majorrel = $1;
+    }
+
+    return $majorrel;    
+}
+
+sub mount_chroot {
+    my $rootimage_dir = shift;
+
+    #postinstall script of some packages might access the /proc, /sys and /dev filesystem
+    #For Redhat7 or above, mount /proc,/sys from host to avoid error messages
+    #For Redhat7 or above, create /dev according to /dev on the host to avoid error messages
+    #For Redhat6 or below, mount these directories might introduce error messages
+    if(majversion($osver) > 6){
+       system("mkdir -p $rootimage_dir/proc");
+       system("mount proc $rootimage_dir/proc -t proc");
+       system("mkdir -p $rootimage_dir/sys");
+       system("mount sysfs $rootimage_dir/sys -t sysfs");
+       system("mkdir -p $rootimage_dir/dev");
+       #system("mount devtmpfs $rootimage_dir/dev -t devtmpfs");
+       system("cd /dev;find .|cpio -H newc -o >$rootimage_dir/dev/dev.archive;cd -");
+       system("cd $rootimage_dir/dev;cpio -idum<./dev.archive;rm -f ./dev.archive;cd -");
+    }
+}
+
+
+
+sub umount_chroot {
+    my $rootimage_dir = shift;
+
+    if(majversion($osver) >6){
+        system("umount -l $rootimage_dir/proc");
+        system("umount -l $rootimage_dir/sys");
+        #system("umount -l $rootimage_dir/dev");
+        system("rm -rf $rootimage_dir/dev/*");
+    }
 }
 
 #check whether a dir is NFS mounted
@@ -283,6 +330,8 @@ unless ($onlyinitrd) {
        exit 1;
    }
 
+   mount_chroot($rootimg_dir);
+
    my %pkg_hash=imgutils::get_package_names($pkglist);
 
    my $index=1;
@@ -292,6 +341,7 @@ unless ($onlyinitrd) {
         foreach (keys(%{$pkg_hash{$pass}})) {
             if($_ eq "INCLUDEBAD")  {
                print "Unable to open the following pkglist files:\n".join("\n",@{$pkg_hash{$pass}{INCLUDEBAD}});
+               umount_chroot($rootimg_dir);
                exit 1;
             }
 
@@ -320,6 +370,7 @@ unless ($onlyinitrd) {
                     }
                     if ($found eq 0) {
                         print "Cannot find the kernel with version $kernelver.\n";
+                        umount_chroot($rootimg_dir);
                         exit 1;
                     }
                     push @npa, $kernelname;
@@ -342,6 +393,7 @@ unless ($onlyinitrd) {
         my $rc = system("$envlist $yumcmd install $pkgnames");
         if ($rc) { 
             print "yum invocation failed\n";
+            umount_chroot($rootimg_dir);
             exit 1;
         }
     }
@@ -366,6 +418,7 @@ unless ($onlyinitrd) {
 
                 if($_ eq "INCLUDEBAD")  {
                     print "Unable to open the following pkglist files:\n".join("\n",@{$extra_hash{$pass}{INCLUDEBAD}});
+                    umount_chroot($rootimg_dir);
                     exit 1;
                 }
             
@@ -444,6 +497,7 @@ unless ($onlyinitrd) {
                     print "yum invocation failed\n";
                     # remove the hacked uname file
                     unuse_hackuname();
+                    umount_chroot($rootimg_dir);
                     exit 1;
                 }
             } else {
@@ -475,8 +529,9 @@ unless ($onlyinitrd) {
  
         # use the original uname binary
         unuse_hackuname();
-
     }
+
+    umount_chroot($rootimg_dir);
     # ignore any return code
     postscripts(); #run 'postscripts'
 }
@@ -936,14 +991,19 @@ sub mkinitrd_dracut {
         $perm = (stat("$fullpath/$dracutdir/installkernel"))[2];
         chmod($perm&07777, "$dracutmpath/installkernel");
 
+        my $dracutmodulelist=" xcat nfs base network kernel-modules ";
+        if (-d glob($dracutmoduledir."[0-9]*fadump")){
+            $dracutmodulelist .=" fadump ";
+
+        }
+
+        if ($dracutver >= "033") {
+            $dracutmodulelist .= " syslog ";
+        }
+
         # update etc/dracut.conf
         open($DRACUTCONF, '>', "$rootimg_dir/etc/dracut.conf");
-        if (-d glob($dracutmoduledir."[0-9]*fadump")){
-            print $DRACUTCONF qq{dracutmodules+="xcat nfs base network kernel-modules fadump syslog"\n};
-        }
-        else{
-            print $DRACUTCONF qq{dracutmodules+="xcat nfs base network kernel-modules syslog"\n};
-        }
+        print $DRACUTCONF qq{dracutmodules+="$dracutmodulelist"\n};
         print $DRACUTCONF qq{add_drivers+="$add_drivers"\n};
         close $DRACUTCONF;
     } else {

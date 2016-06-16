@@ -21,10 +21,10 @@ prsync - parallel rsync
 
 \ **prsync**\  \ *filename*\  [\ *filename*\  \ *...*\ ] \ *noderange:destinationdirectory*\ 
 
-\ **prsync**\   [\ *-o rsync options*\ ] [\ **-f**\  \ *fanout*\ ] [\ *filename*\  \ *filename*\  \ *...*\ ] [\ *directory*\  \ *directory*\  \ *...*\ ]
+\ **prsync**\   [\ **-o**\  \ *rsync options*\ ] [\ **-f**\  \ *fanout*\ ] [\ *filename*\  \ *filename*\  \ *...*\ ] [\ *directory*\  \ *directory*\  \ *...*\ ]
 \ *noderange:destinationdirectory*\ 
 
-\ **prsync**\  {\ **-h**\ |\ **--help**\ |\ **-v**\ |\ **--version**\ }
+\ **prsync**\  {\ **-h | -**\ **-help | -v | -**\ **-version**\ }
 
 
 *******************
@@ -47,7 +47,7 @@ management node to the compute node via a service node
 
 
 
-\ **rsyncopts**\ 
+\ *rsyncopts*\ 
  
  rsync options.  See \ **rsync(1)**\ .
  
@@ -60,31 +60,31 @@ management node to the compute node via a service node
  
 
 
-\ **filename**\ 
+\ *filename*\ 
  
  A space delimited list of files to rsync.
  
 
 
-\ **directory**\ 
+\ *directory*\ 
  
  A space delimited list of directories to rsync.
  
 
 
-\ **noderange:destination**\ 
+\ *noderange:destination*\ 
  
  A noderange(3)|noderange.3 and destination directory.  The : is required.
  
 
 
-\ **-h**\ |\ **--help**\ 
+\ **-h | -**\ **-help**\ 
  
  Print help.
  
 
 
-\ **-v**\ |\ **--version**\ 
+\ **-v | -**\ **-version**\ 
  
  Print version.
  
@@ -105,15 +105,23 @@ management node to the compute node via a service node
 
 
 
-\*
+1.
  
- \ **cd**\  \ */install;*\  \ **prsync**\  \ **-o "crz"**\  \ *post*\  \ *stage:/install*\ 
+ 
+ .. code-block:: perl
+ 
+   cd /install; prsync -o "crz" post stage:/install
+ 
  
 
 
-\*
+2.
  
- \ **prsync**\  \ *passwd*\  \ *group*\  \ *rack01:/etc*\ 
+ 
+ .. code-block:: perl
+ 
+   prsync passwd group rack01:/etc
+ 
  
 
 

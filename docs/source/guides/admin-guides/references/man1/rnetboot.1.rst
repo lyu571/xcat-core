@@ -19,15 +19,15 @@ SYNOPSIS
 ********
 
 
-\ **rnetboot**\  [\ **-V**\ |\ **--verbose**\ ] [\ **-s**\  \ *boot_device_order*\ ] [\ **-F**\ ] [\ **-f**\ ] \ *noderange*\  [\ **-m**\  \ *table.column*\ ==\ *expectedstatus*\  [\ **-m**\  \ *table.col-umn*\ =~\ *expectedstatus*\ ]] [\ **-t**\  \ *timeout*\ ] [\ **-r**\  \ *retrycount*\ ]
+\ **rnetboot**\  [\ **-V | -**\ **-verbose**\ ] [\ **-s**\  \ *boot_device_order*\ ] [\ **-F**\ ] [\ **-f**\ ] \ *noderange*\  [\ **-m**\  \ *table.column*\ ==\ *expectedstatus*\  [\ **-m**\  \ *table.col-umn*\ =~\ *expectedstatus*\ ]] [\ **-t**\  \ *timeout*\ ] [\ **-r**\  \ *retrycount*\ ]
 
-\ **rnetboot**\  [\ **-h**\ |\ **--help**\ ] [\ **-v**\ |\ **--version**\ ]
+\ **rnetboot**\  [\ **-h | -**\ **-help**\ ] [\ **-v | -**\ **-version**\ ]
 
 zVM specific:
 =============
 
 
-\ **rnetboot**\  noderange [\ **ipl=**\  \ *address*\ ]
+\ **rnetboot**\  \ *noderange*\  [\ **ipl=**\  \ *address*\ ]
 
 
 
@@ -72,15 +72,15 @@ specify the number of retries that the monitoring process will perform before de
 
 Specify the the timeout, in minutes, to wait for the expectedstatus specified by -m flag. This is a required flag if the -m flag is specified.
 
-\ **-V**\ 
+\ **-V|-**\ **-verbose**\ 
 
 Verbose output.
 
-\ **-h**\ 
+\ **-h|-**\ **-help**\ 
 
 Display usage message.
 
-\ **-v**\ 
+\ **-v|-**\ **-version**\ 
 
 Command Version.
 

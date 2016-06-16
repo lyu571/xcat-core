@@ -19,9 +19,9 @@ SYNOPSIS
 ********
 
 
-\ **cat**\  \ *stanza-file*\  \ **|**\  \ **rollupdate**\  [\ **-V**\  | \ **--verbose**\ ] [\ **-t**\ | \ **--test**\ ]
+\ **cat**\  \ *stanza-file*\  \ **|**\  \ **rollupdate**\  [\ **-V**\  | \ **-**\ **-verbose**\ ] [\ **-t**\ | \ **-**\ **-test**\ ]
 
-\ **rollupdate**\  [\ **-?**\  | \ **-h**\  | \ **--help**\  | \ **-v**\  | \ **--version**\ ]
+\ **rollupdate**\  [\ **-?**\  | \ **-h**\  | \ **-**\ **-help**\  | \ **-v**\  | \ **-**\ **-version**\ ]
 
 
 ***********
@@ -48,25 +48,25 @@ OPTIONS
 
 
 
-\ **-v|--version**\ 
+\ **-v|-**\ **-version**\ 
  
  Command Version.
  
 
 
-\ **-V|--verbose**\ 
+\ **-V|-**\ **-verbose**\ 
  
  Display additional progress and error messages.  Output is also logged in /var/log/xcat/rollupdate.log.
  
 
 
-\ **-t|--test**\ 
+\ **-t|-**\ **-test**\ 
  
  Run the rollupdate command in test mode only to verify the output files that are created.  No scheduler reservation requests will be submitted.
  
 
 
-\ **-?|-h|--help**\ 
+\ **-?|-h|-**\ **-help**\ 
  
  Display usage message.
  
@@ -79,16 +79,12 @@ RETURN VALUE
 
 
 
-0
- 
- The command completed successfully.
- 
+0 The command completed successfully.
 
 
-1
- 
- An error has occurred.
- 
+
+1 An error has occurred.
+
 
 
 
@@ -119,10 +115,15 @@ FILES
 
 
 /opt/xcat/bin/rollupdate
+
 /opt/xcat/share/xcat/rollupdate/rollupdate.input.sample
+
 /opt/xcat/share/xcat/rollupdate/ll.tmpl
+
 /opt/xcat/share/xcat/rollupdate/rollupdate_all.input.sample
+
 /opt/xcat/share/xcat/rollupdate/llall.tmpl
+
 /var/log/xcat/rollupdate.log
 
 

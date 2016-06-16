@@ -19,10 +19,7 @@ xdcp.1
 ****************
 
 
-\ **xdcp**\  \ *noderange*\   [[\ **-f**\  \ *fanout*\ ]
-[\ **-L**\ ]  [\ **-l**\   \ *userID*\ ] [\ **-o**\  \ *node_options*\ ] [\ **-p**\ ]
-[\ **-P**\ ] [\ **-r**\  \ *node_remote_shell*\ ] [\ **-R**\ ] [\ **-t**\  \ *timeout*\ ]
-[\ **-T**\ ] [\ **-v**\ ] [\ **-q**\ ] [\ **-X**\  \ *env_list*\ ] sourcefile.... targetpath
+\ **xdcp**\  \ *noderange*\   [[\ **-B**\  | \ **-**\ **-bypass**\ ] [\ **-f**\  \ *fanout*\ ] [\ **-L**\ ]  [\ **-l**\   \ *userID*\ ] [\ **-o**\  \ *node_options*\ ] [\ **-p**\ ] [\ **-P**\ ] [\ **-r**\  \ *node_remote_shell*\ ] [\ **-R**\ ] [\ **-t**\  \ *timeout*\ ] [\ **-T**\ ] [\ **-v**\ ] [\ **-q**\ ] [\ **-X**\  \ *env_list*\ ] \ *sourcefile.... targetpath*\ 
 
 \ **xdcp**\  \ *noderange*\   [\ **-F**\  \ *rsync input file*\ ]
 
@@ -39,15 +36,13 @@ xdcp.1
 
 
 The \ **xdcp**\  command concurrently copies files  to  or  from  remote  target
-nodes. The command issues a remote copy com-
-mand for each node or device specified. When files are  pulled  from  a
-target,  they  are  placed  into  the  target_path with the name of the
+nodes. The command issues a remote copy command for each node or device specified. When files are  pulled  from a target,  they  are  placed  into  the  target_path with the name of the
 remote node or device appended to  the  copied  source_file  name.  The
 /usr/bin/rcp command is the model for syntax and security. 
 If using hierarchy, then xdcp runs on the service node that is servicing the compute node. The file will first be copied to the path defined in the site table, SNsyncfiledir attribute, or the default path /var/xcat/syncfiles on the service node, if the attribute is not defined. The -P flag will not automatically copy
 the files from the compute node to the Management node, hierarchically.  There
-is a two step process, see -P flag.  
-If the Management Node is target node, it must be defined in the xCAT database with nodetype=mn. When the \ **xdcp**\  command runs the Management Node as the target, it does not use remote commands but uses the local OS copy (cp) command.
+is a two step process, see \ **-P**\  flag.  
+If the Management Node is target node, it must be defined in the xCAT database with nodetype=mn. When the \ **xdcp**\  command runs the Management Node as the target, it does not use remote commands but uses the local OS copy (\ **cp**\ ) command.
 
 \ **REMOTE**\  \ **USER**\ :
 
@@ -56,6 +51,7 @@ specification is identical for the xdcp and xdsh commands.  See  the  xdsh
 command for more information.
 
 \ **REMOTE**\  \ **COMMAND**\  \ **COPY**\ :
+
 The  \ **xdcp**\   command  uses  a  configurable remote copy command to execute
 remote copies on remote targets. Support is explicitly  provided  for
 Remote  Shell  rcp  command,  the  OpenSSH  scp  command  and  the
@@ -68,24 +64,23 @@ ing order of precedence:
 
 2. The \ **/usr/bin/scp**\  command.
 
-\ **COMMAND**\  \ **EXECUTIONS**\ 
+\ **COMMAND**\  \ **EXECUTIONS**\ :
+
 The  maximum  number  of  concurrent remote copy command processes (the
-fanout) can be specified with the -f flag or the DSH_FANOUT environment
+fanout) can be specified with the \ **-f**\  flag or the DSH_FANOUT environment
 variable.  The  fanout is only restricted by the number of remote shell
 commands that can be run in  parallel.  You  can  experiment  with  the
 DSH_FANOUT  value on your management server to see if higher values are
 appropriate.
 
 A timeout value for remote copy command execution can be specified with
-the  -t  flag or DSH_TIMEOUT environment variable. If any remote target
+the \ **-t**\  flag or DSH_TIMEOUT environment variable. If any remote target
 does not respond within the timeout value, the xdcp command displays  an
 error message and exits.
 
-The  -T flag provides diagnostic trace information for dcp command exe-
-cution. Default settings and the actual remote copy commands  that  are
-executed to the remote targets are displayed.
+The \ **-T**\  flag provides diagnostic trace information for dcp command execution. Default settings and the actual remote copy commands that are executed to the remote targets are displayed.
 
-The  xdcp  command can be executed silently using the -Q flag; no target
+The \ **xdcp**\  command can be executed silently using the \ **-Q**\  flag; no target
 standard output or standard error is displayed.
 
 
@@ -95,7 +90,7 @@ standard output or standard error is displayed.
 
 
 
-\ **sourcefile...**\ 
+\ *sourcefile...*\ 
  
  Specifies the complete path for the file to be  copied  to  or
  from  the  target.  Multiple files can be specified. When used
@@ -104,7 +99,7 @@ standard output or standard error is displayed.
  
 
 
-\ **targetpath**\ 
+\ *targetpath*\ 
  
  If one source_file file, then it specifies the file to copy the source_file
  file to on the target. If multiple source_file files, it specifies
@@ -117,19 +112,25 @@ standard output or standard error is displayed.
  
 
 
-\ **-f**\ |\ **--fanout**\  \ *fanout_value*\ 
+\ **-B | -**\ **-bypass**\ 
+ 
+ Runs in bypass mode, use if the xcatd daemon is hung.
+ 
+
+
+\ **-f | -**\ **-fanout**\  \ *fanout_value*\ 
  
  Specifies a fanout value for the maximum number of  concur-
  rently  executing  remote shell processes. Serial execution
- can be specified by indicating a fanout value of \ **1**\ .  If  \ **-f**\ 
- is not specified, a default fanout value of \ **64**\  is used.
+ can be specified by indicating a fanout value of \ **1**\ .  
+ If \ **-f**\  is not specified, a default fanout value of \ **64**\  is used.
  
 
 
-\ **-F**\ |\ **--File**\  \ *rsync input file*\ 
+\ **-F | -**\ **-File**\  \ *rsync input file*\ 
  
  Specifies the path to the file that will be used to  
- build the rsync command.
+ build the \ **rsync**\  command.
  The format of the input file is as follows, each line contains:
  
  
@@ -155,11 +156,12 @@ standard output or standard error is displayed.
  
  
  For example:
-   /etc/password /etc/hosts -> /etc
  
  
  .. code-block:: perl
  
+    /etc/password /etc/hosts -> /etc
+  
     /tmp/file2  ->  /tmp/file2
   
     /tmp/file2  ->  /tmp/
@@ -187,17 +189,22 @@ standard output or standard error is displayed.
  The scripts must be also added to the file list to rsync to the node for hierarchical clusters.  It is optional for non-hierarchical clusters.
  
  For example, your rsynclist file may look like this:
-  /tmp/share/file2  ->  /tmp/file2
-  /tmp/share/file2.post -> /tmp/file2.post
-  /tmp/share/file3  ->  /tmp/filex
-  /tmp/share/file3.post -> /tmp/file3.post
-  /tmp/myscript -> /tmp/myscript
-  # the below are postscripts
-  EXECUTE:
-  /tmp/share/file2.post
-  /tmp/share/file3.post
-  EXECUTEALWAYS:
-  /tmp/myscript
+ 
+ 
+ .. code-block:: perl
+ 
+   /tmp/share/file2  ->  /tmp/file2
+   /tmp/share/file2.post -> /tmp/file2.post
+   /tmp/share/file3  ->  /tmp/filex
+   /tmp/share/file3.post -> /tmp/file3.post
+   /tmp/myscript -> /tmp/myscript
+   # the below are postscripts
+   EXECUTE:
+   /tmp/share/file2.post
+   /tmp/share/file3.post
+   EXECUTEALWAYS:
+   /tmp/myscript
+ 
  
  If /tmp/file2 and /tmp/file3  update /tmp/file2 and /tmp/filex on the node, then the postscripts /tmp/file2.post and /tmp/file3.post are automatically run on 
  the node. /tmp/myscript will always be run on the node.
@@ -205,20 +212,25 @@ standard output or standard error is displayed.
  Another option is the \ **APPEND:**\  clause in the synclist file. The \ **APPEND:**\  clause is used to append the contents of the input file to an existing file on the node.  The file to append \ **must**\  already exist on the node and not be part of the synclist that contains the \ **APPEND:**\  clause.
  
  For example, your rsynclist file may look like this:
-  /tmp/share/file2  ->  /tmp/file2
-  /tmp/share/file2.post -> /tmp/file2.post
-  /tmp/share/file3  ->  /tmp/filex
-  /tmp/share/file3.post -> /tmp/file3.post
-  /tmp/myscript -> /tmp/myscript
-  # the below are postscripts
-  EXECUTE:
-  /tmp/share/file2.post
-  /tmp/share/file3.post
-  EXECUTEALWAYS:
-  /tmp/myscript
-  APPEND:
-  /etc/myappenddir/appendfile -> /etc/mysetup/setup
-  /etc/myappenddir/appendfile2 -> /etc/mysetup/setup2
+ 
+ 
+ .. code-block:: perl
+ 
+   /tmp/share/file2  ->  /tmp/file2
+   /tmp/share/file2.post -> /tmp/file2.post
+   /tmp/share/file3  ->  /tmp/filex
+   /tmp/share/file3.post -> /tmp/file3.post
+   /tmp/myscript -> /tmp/myscript
+   # the below are postscripts
+   EXECUTE:
+   /tmp/share/file2.post
+   /tmp/share/file3.post
+   EXECUTEALWAYS:
+   /tmp/myscript
+   APPEND:
+   /etc/myappenddir/appendfile -> /etc/mysetup/setup
+   /etc/myappenddir/appendfile2 -> /etc/mysetup/setup2
+ 
  
  When you use the append script,  the file  (left) of the arrow is appended to the file right of the arrow.  In this example, /etc/myappenddir/appendfile is appended to /etc/mysetup/setup file, which must already exist on the node. The /opt/xcat/share/xcat/scripts/xdcpappend.sh is used to accomplish this.
  
@@ -237,9 +249,9 @@ standard output or standard error is displayed.
   EXECUTEALWAYS:
   /tmp/myscript
   APPEND:
- /custom/mypasswd -> /etc/passwd
- /custom/mygroups -> /etc/group
- /custom/myshadow -> /etc/shadow
+  /custom/mypasswd -> /etc/passwd
+  /custom/mygroups -> /etc/group
+  /custom/myshadow -> /etc/shadow
  
  Note: no order can be assumed by the order that the EXECUTE,EXECUTEALWAYS and APPEND clause fall in the synclist file.
  
@@ -249,19 +261,19 @@ standard output or standard error is displayed.
  
 
 
-\ **-h**\ |\ **--help**\ 
+\ **-h | -**\ **-help**\ 
  
  Displays usage information.
  
 
 
-\ **-i**\ |\ **--rootimg**\  \ *install image*\ 
+\ **-i | -**\ **-rootimg**\  \ *install image*\ 
  
  Specifies  the path to the install image on the local Linux node.
  
 
 
-\ **-o**\ |\ **--node-options**\  \ *node_options*\ 
+\ **-o | -**\ **-node-options**\  \ *node_options*\ 
  
  Specifies options to pass to the remote shell  command  for
  node  targets.  The options must be specified within double
@@ -269,20 +281,20 @@ standard output or standard error is displayed.
  
 
 
-\ **-p**\ |\ **--preserve**\ 
+\ **-p | -**\ **-preserve**\ 
  
  Preserves  the  source  file characteristics as implemented by
  the configured remote copy command.
  
 
 
-\ **-P**\ |\ **--pull**\ 
+\ **-P | -**\ **-pull**\ 
  
  Pulls (copies) the files from the targets and places  them  in
  the  target_path  directory on the local host. The target_path
  must be a directory. Files pulled from  remote  machines  have
  ._target  appended  to  the  file  name to distinguish between
- them. When the -P flag is used with the -R flag,  ._target  is
+ them. When the \ **-P**\  flag is used with the \ **-R**\  flag,  ._target  is
  appended to the directory. Only one file per invocation of the
  xdcp pull command can be pulled from the specified  targets.
  Hierarchy is not automatically support yet.   You must first pull
@@ -291,7 +303,7 @@ standard output or standard error is displayed.
  
 
 
-\ **-q**\ |\ **--show-config**\ 
+\ **-q | -**\ **-show-config**\ 
  
  Displays the current environment settings for all DSH
  Utilities commands. This includes the values of all environment
@@ -301,17 +313,17 @@ standard output or standard error is displayed.
  
 
 
-\ **-r**\ |\ **--node-rcp**\  \ *node_remote_copy*\ 
+\ **-r | -**\ **-node-rcp**\  \ *node_remote_copy*\ 
  
  Specifies  the  full  path of the remote copy command used
  for remote command execution on node targets.
  
 
 
-\ **-R**\ |\ **--recursive**\  \ *recursive*\ 
+\ **-R | -**\ **-recursive**\  \ *recursive*\ 
  
  Recursively  copies files from a local directory to the remote
- targets, or when specified with the -P flag, recursively pulls
+ targets, or when specified with the \ **-P**\  flag, recursively pulls
  (copies)  files  from  a remote directory to the local host. A
  single source directory can be specified using the source_file
  parameter.
@@ -320,19 +332,19 @@ standard output or standard error is displayed.
 
 \ **-s**\  \ *synch service nodes*\ 
  
- Will only sync the files listed in the synclist (-F), to the service
+ Will only sync the files listed in the synclist (\ **-F**\ ), to the service
  nodes for the input compute node list. The files will be placed in the
  directory defined by the site.SNsyncfiledir attribute, or the default
  /var/xcat/syncfiles directory.
  
 
 
-\ **-t**\ |\ **--timeout**\  \ *timeout*\ 
+\ **-t | -**\ **-timeout**\  \ *timeout*\ 
  
  Specifies the time, in seconds, to wait for output from any
  currently executing remote targets. If no output is
- available  from  any  target in the specified \ *timeout*\ , \ **xdsh**\ 
- displays an error and terminates execution for the remote
+ available  from  any  target in the specified \ *timeout*\ , 
+ \ **xdsh**\  displays an error and terminates execution for the remote
  targets  that  failed to respond. If \ *timeout*\  is not specified,
  \ **xdsh**\  waits indefinitely to continue processing output  from
  all  remote  targets.  When specified with the \ **-i**\  flag, the
@@ -341,14 +353,14 @@ standard output or standard error is displayed.
  
 
 
-\ **-T**\ |\ **--trace**\ 
+\ **-T | -**\ **-trace**\ 
  
  Enables trace mode. The \ **xdcp**\  command prints diagnostic
  messages to standard output during execution to each target.
  
 
 
-\ **-v**\ |\ **--verify**\ 
+\ **-v | -**\ **-verify**\ 
  
  Verifies each target before executing any  remote  commands
  on  the target. If a target is not responding, execution of
@@ -356,7 +368,7 @@ standard output or standard error is displayed.
  
 
 
-\ **-V**\ |\ **--version**\ 
+\ **-V | -**\ **-version**\ 
  
  Displays the \ **xdcp**\  command version information.
  
@@ -484,12 +496,14 @@ userdefined.
 
 
 
-\*
+1. To copy the /etc/hosts file from all  nodes in the cluster
+to the /tmp/hosts.dir directory on the local host, enter:
  
- To copy the /etc/hosts file from all  nodes in the cluster
- to the /tmp/hosts.dir directory on the local host, enter:
  
- \ **xdcp**\  \ *all -P /etc/hosts /tmp/hosts.dir*\ 
+ .. code-block:: perl
+ 
+   xdcp all -P /etc/hosts /tmp/hosts.dir
+ 
  
  A suffix specifying the name of the target is  appended  to  each
  file name. The contents of the /tmp/hosts.dir directory are similar to:
@@ -504,64 +518,74 @@ userdefined.
  
 
 
-\*
+2. To copy the directory /var/log/testlogdir  from  all  targets  in
+NodeGroup1 with a fanout of 12, and save each directory on  the  local
+host as /var/log._target, enter:
  
- To copy the directory /var/log/testlogdir  from  all  targets  in
- NodeGroup1 with a fanout of 12, and save each directory on  the  local
- host as /var/log._target, enter:
  
- \ **xdcp**\  \ *NodeGroup1 -f 12 -RP /var/log/testlogdir /var/log*\ 
+ .. code-block:: perl
  
-
-
-\*
+   xdcp NodeGroup1 -f 12 -RP /var/log/testlogdir /var/log
  
- To copy  /localnode/smallfile and /tmp/bigfile to /tmp on node1
- using rsync and input -t flag to rsync, enter:
- 
- \ *xdcp node1 -r /usr/bin/rsync -o "-t"  /localnode/smallfile /tmp/bigfile /tmp*\ 
  
 
 
-\*
+3. To copy  /localnode/smallfile and /tmp/bigfile to /tmp on node1
+using rsync and input -t flag to rsync, enter:
  
- To copy the /etc/hosts file from the local host to all the nodes
- in the cluster, enter:
  
- \ **xdcp**\  \ *all /etc/hosts /etc/hosts*\ 
+ .. code-block:: perl
  
-
-
-\*
+   xdcp node1 -r /usr/bin/rsync -o "-t" /localnode/smallfile /tmp/bigfile /tmp
  
- To copy all the files in /tmp/testdir from the local host to all the nodes
- in the cluster, enter:
- 
- \ **xdcp**\  \ *all /tmp/testdir/\\* /tmp/testdir*\ 
  
 
 
-\*
+4. To copy the /etc/hosts file from the local host to all the nodes
+in the cluster, enter:
  
- To copy all the files in /tmp/testdir and it's subdirectories 
- from the local host to node1 in the cluster, enter:
  
- \ **xdcp**\  \ *node1 -R /tmp/testdir /tmp/testdir*\ 
+ .. code-block:: perl
  
-
-
-\*
+   xdcp all /etc/hosts /etc/hosts
  
- To copy the /etc/hosts  file  from  node1  and  node2  to the
- /tmp/hosts.dir directory on the local host, enter:
- 
- \ **xdcp**\  \ *node1,node2 -P /etc/hosts /tmp/hosts.dir*\ 
  
 
 
-\*
+5. To copy all the files in /tmp/testdir from the local host to all the nodes
+in the cluster, enter:
  
- To rsync the /etc/hosts file to your compute nodes:
+ 
+ .. code-block:: perl
+ 
+   xdcp all /tmp/testdir/* /tmp/testdir
+ 
+ 
+
+
+6. To copy all the files in /tmp/testdir and it's subdirectories 
+from the local host to node1 in the cluster, enter:
+ 
+ 
+ .. code-block:: perl
+ 
+   xdcp node1 -R /tmp/testdir /tmp/testdir
+ 
+ 
+
+
+7. To copy the /etc/hosts  file  from  node1  and  node2  to the
+/tmp/hosts.dir directory on the local host, enter:
+ 
+ 
+ .. code-block:: perl
+ 
+   xdcp node1,node2 -P /etc/hosts /tmp/hosts.dir
+ 
+ 
+
+
+8. To rsync the /etc/hosts file to your compute nodes:
  
  Create a rsync file /tmp/myrsync, with this line:
  
@@ -573,11 +597,15 @@ userdefined.
  
  Run:
  
- \ **xdcp**\  \ *compute -F /tmp/myrsync*\ 
+ 
+ .. code-block:: perl
+ 
+   xdcp compute -F /tmp/myrsync
+ 
  
 
 
-\*
+9.
  
  To rsync all the files in /home/mikev to the  compute nodes:
  
@@ -587,14 +615,16 @@ userdefined.
  
  Run:
  
- \ **xdcp**\  \ *compute -F /tmp/myrsync*\ 
+ 
+ .. code-block:: perl
+ 
+   xdcp compute -F /tmp/myrsync
+ 
  
 
 
-\*
- 
- To rsync to the compute nodes, using service nodes, the command will first
- rsync the files to the  /var/xcat/syncfiles directory on the service nodes and then rsync the files from that directory to the compute nodes. The /var/xcat/syncfiles default directory on the service nodes, can be changed by putting a directory value in the site table SNsyncfiledir attribute.
+10. To rsync to the compute nodes, using service nodes, the command will first
+rsync the files to the  /var/xcat/syncfiles directory on the service nodes and then rsync the files from that directory to the compute nodes. The /var/xcat/syncfiles default directory on the service nodes, can be changed by putting a directory value in the site table SNsyncfiledir attribute.
  
  Create a rsync file /tmp/myrsync, with this line:
  
@@ -606,14 +636,18 @@ userdefined.
  
  Run:
  
- \ **xdcp**\  \ *compute  -F /tmp/myrsync*\     to update the Compute Nodes
+ 
+ .. code-block:: perl
+ 
+   xdcp compute -F /tmp/myrsync
+ 
+ 
+ to update the Compute Nodes
  
 
 
-\*
- 
- To rsync to the service nodes in preparation for rsyncing the compute nodes
- during an install from the service node.
+11. To rsync to the service nodes in preparation for rsyncing the compute nodes
+during an install from the service node.
  
  Create a rsync file /tmp/myrsync, with this line:
  
@@ -621,13 +655,17 @@ userdefined.
  
  Run:
  
- \ **xdcp**\  \ *compute -s  -F /tmp/myrsync*\  to sync the service node for compute
+ 
+ .. code-block:: perl
+ 
+   xdcp compute -s -F /tmp/myrsync
+ 
+ 
+ to sync the service node for compute
  
 
 
-\*
- 
- To rsync the /etc/file1 and file2 to your compute nodes and rename to  filex and filey:
+12. To rsync the /etc/file1 and file2 to your compute nodes and rename to  filex and filey:
  
  Create a rsync file /tmp/myrsync, with these line:
  
@@ -637,13 +675,17 @@ userdefined.
  
  Run:
  
- \ **xdcp**\  \ *compute  -F /tmp/myrsync*\     to update the Compute Nodes
+ 
+ .. code-block:: perl
+ 
+   xdcp compute -F /tmp/myrsync
+ 
+ 
+ to update the Compute Nodes
  
 
 
-\*
- 
- To rsync files in the Linux image at /install/netboot/fedora9/x86_64/compute/rootimg on the MN:
+13. To rsync files in the Linux image at /install/netboot/fedora9/x86_64/compute/rootimg on the MN:
  
  Create a rsync file /tmp/myrsync, with this line:
  
@@ -651,15 +693,21 @@ userdefined.
  
  Run:
  
- \ **xdcp**\  \ *-i /install/netboot/fedora9/x86_64/compute/rootimg -F /tmp/myrsync*\ 
+ 
+ .. code-block:: perl
+ 
+   xdcp -i /install/netboot/fedora9/x86_64/compute/rootimg -F /tmp/myrsync
+ 
  
 
 
-\*
+14. To define the Management Node in the database so you can use xdcp, run
  
- To define the Management Node  in the database so you can use xdcp,run
  
- \ **xcatconfig -m**\ 
+ .. code-block:: perl
+ 
+   xcatconfig -m
+ 
  
 
 

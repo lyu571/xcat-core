@@ -745,24 +745,24 @@ sub mknetboot
            $kcmdline .= " nonodestatus ";
         }
 
-        if($::XCATSITEVALS{xcatdebugmode} eq "1"){
+        if (($::XCATSITEVALS{xcatdebugmode} eq "1") or ($::XCATSITEVALS{xcatdebugmode} eq "2")) {
 
-           my ($host, $ipaddr) = xCAT::NetworkUtils->gethostnameandip($xcatmaster);
-           if($ipaddr){
-              #for use in postscript and postbootscript in xcatdsklspost in the rootimg
-              $kcmdline .=" LOGSERVER=$ipaddr ";
-             
-              #for use in syslog dracut module in the initrd 
-              $kcmdline .=" syslog.server=$ipaddr syslog.type=rsyslogd syslog.filter=*.* ";
-           }else{
-              #for use in postscript and postbootscript in xcatdsklspost in the rootimg
-              $kcmdline .=" LOGSERVER=$xcatmaster ";
+            my ($host, $ipaddr) = xCAT::NetworkUtils->gethostnameandip($xcatmaster);
+            if ($ipaddr) {
+                #for use in postscript and postbootscript in xcatdsklspost in the rootimg
+                $kcmdline .=" LOGSERVER=$ipaddr ";
 
-              #for use in syslog dracut module in the initrd 
-              $kcmdline .=" syslog.server=$xcatmaster syslog.type=rsyslogd syslog.filter=*.* ";
-           }
+                #for use in syslog dracut module in the initrd
+                $kcmdline .=" syslog.server=$ipaddr syslog.type=rsyslogd syslog.filter=*.* ";
+            }
+            else {
+                #for use in postscript and postbootscript in xcatdsklspost in the rootimg
+                $kcmdline .=" LOGSERVER=$xcatmaster ";
 
-           $kcmdline .= " xcatdebugmode=1 ";
+                #for use in syslog dracut module in the initrd
+                $kcmdline .=" syslog.server=$xcatmaster syslog.type=rsyslogd syslog.filter=*.* ";
+            }
+            $kcmdline .= " xcatdebugmode=$::XCATSITEVALS{xcatdebugmode} ";
         }
 
         # Add kernel parameters to specify the boot network interface
@@ -1478,7 +1478,8 @@ sub mkinstall
                }         
 
                if($gateway eq '<xcatmaster>'){
-                      $gateway = xCAT::NetworkUtils->my_ip_facing($ipaddr);
+                      my @gatewayd = xCAT::NetworkUtils->my_ip_facing($ipaddr);
+                      unless ($gatewayd[0]) { $gateway = $gatewayd[1];}
                }
                
                if(xCAT::Utils->version_cmp($kversion,"7.0")<0){
@@ -1503,7 +1504,8 @@ sub mkinstall
                 {
                    my $ip;
                    if($_ eq '<xcatmaster>'){
-                      $ip = xCAT::NetworkUtils->my_ip_facing($gateway);
+                      my @ipd = xCAT::NetworkUtils->my_ip_facing($gateway);
+                      unless ($ipd[0]) { $ip = $ipd[1];}
                    }else{
                       (undef,$ip) = xCAT::NetworkUtils->gethostnameandip($_);
                    }
@@ -1526,15 +1528,17 @@ sub mkinstall
                 }
            }
               
-           if($::XCATSITEVALS{xcatdebugmode} eq "1"){
+           if(($::XCATSITEVALS{xcatdebugmode} eq "1") or ($::XCATSITEVALS{xcatdebugmode} eq "2")){
                  unless($instserver eq '!myipfn!'){
                     my($host,$ip)=xCAT::NetworkUtils->gethostnameandip($instserver);
                     $instserver=$ip;
                  } 
  
                  if (xCAT::Utils->version_cmp($kversion,"7.0") >= 0){
-                    #enable ssh access during installation
-                    $kcmdline .= " inst.sshd";  
+                    if($::XCATSITEVALS{xcatdebugmode} eq "2"){
+                       #enable ssh access during installation
+                       $kcmdline .= " inst.sshd";  
+                    }
                            
                     #set minimum level of messages to be logged on the console
                     #to be "debug"
@@ -1543,7 +1547,9 @@ sub mkinstall
                     #all the logs during installation will be forwarded to xcatmster
                     $kcmdline .=" inst.syslog=$instserver";
                  }else{
-                    $kcmdline .= " sshd=1";
+                    if($::XCATSITEVALS{xcatdebugmode} eq "2"){
+                       $kcmdline .= " sshd=1";
+                    }
                     $kcmdline .=" syslog=$instserver";
                  }
                      
@@ -2178,7 +2184,16 @@ sub copycd
 
     unless ($distname)
     {
-        return;    #Do nothing, not ours..
+        if ($desc =~ /IBM_PowerKVM/)
+        {
+            # check for PowerKVM support
+            my @pkvm_version = split / /, $desc;
+            $distname = "pkvm" . $pkvm_version[1];
+        }
+        else
+        {
+            return;    #Do nothing, not ours..
+        }
     }
     if ($darch)
     {

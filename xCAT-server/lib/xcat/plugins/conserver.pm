@@ -191,7 +191,7 @@ sub docfheaders {
   my $idx = 0;
   my $skip = 0;
   my @meat = grep(!/^#/,@$content);
-  unless (grep(/^config \* {/,@meat)) {
+  unless (grep(/^config \* \{/,@meat)) {
     # do not add the ssl configurations 
     # if conserver is not compiled with ssl support
     my $cmd = "console -h 2>&1";
@@ -264,7 +264,7 @@ sub docfheaders {
 
   push @newheaders,"default * {\n";
   push @newheaders,"  logfile /var/log/consoles/&;\n";
-  push @newheaders,"  timestamp 1hab;\n";
+  push @newheaders,"  timestamp 1lab;\n";
   push @newheaders,"  rw *;\n";
   push @newheaders,"  master localhost;\n";
 

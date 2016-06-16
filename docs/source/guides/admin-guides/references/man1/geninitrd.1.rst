@@ -11,7 +11,7 @@ NAME
 ****
 
 
-\ **geninitrd**\  - Generate an initrd (initial ramfs) which to be used for statefull install or stateless netboot.
+\ **geninitrd**\  - Generate an initrd (initial ramfs) which to be used for stateful install or stateless netboot.
 
 
 ********
@@ -19,9 +19,9 @@ SYNOPSIS
 ********
 
 
-\ **geninitrd**\  \ *imagename*\  [\ **--ignorekernelchk**\ ]
+\ **geninitrd**\  \ *imagename*\  [\ **-**\ **-ignorekernelchk**\ ]
 
-\ **geninitrd**\  [\ **-h**\  | \ **--help**\ ]
+\ **geninitrd**\  [\ **-h**\  | \ **-**\ **-help**\ ]
 
 
 ***********
@@ -31,10 +31,10 @@ DESCRIPTION
 
 Generate the initrd for the osimage: \ **imagename**\  which is an xCAT object of \ *osimage*\  type.
 
-\ **Diskfull Osimage**\ 
+\ **Diskful Osimage**\ 
 
 
-If the \ **imagename**\  is a statefull one (The provmethod attribute for the osimage is 'install'), 
+If the \ **imagename**\  is a stateful one (The provmethod attribute for the osimage is 'install'), 
 this command is used to rebuild the initrd to inject the new drivers from driver rpms or 
 'update distro' and copy the rebuilt initrd and new kernel (If there's new kernel in 'update 
 distro') to the directory \ */tftpboot/xcat/<imagename*\ >.
@@ -82,7 +82,7 @@ Parameters
 \ *imagename*\  specifies the name of an os image definition to be used. The specification for the image is storted in the \ *osimage*\  table and \ *linuximage*\  table.
 
 
-\ **--ignorekernelchk**\ 
+\ **-**\ **-ignorekernelchk**\ 
  
  Skip the kernel version checking when injecting drivers from osimage.driverupdatesrc. That means all drivers from osimage.driverupdatesrc will be injected to initrd for the specific target kernel.
  

@@ -1,6 +1,6 @@
 .. include:: ../../common/discover/switch_discovery.rst
 
-For switch based hardware discovery, the server are identified though the switches and switchposts they directly connect to. 
+For switch based hardware discovery, the servers are identified through the switches and switchposts they are directly connected to. 
 
 .. include:: schedule_environment.rst
 
@@ -12,6 +12,8 @@ Switch info::
     Switch IP Address: 10.0.201.1
     Switch port for Compute Node: port0
 
+.. _Setup-dhcp:
+
 .. include:: config_environment.rst
 
 Predefined Nodes
@@ -19,8 +21,8 @@ Predefined Nodes
 
 In order to differentiate one node from another, the admin needs to predefine node in xCAT database based on the switches information. This consists of two parts:
 
-#. :ref:`predefined_switches_label`
-#. :ref:`predefined_server_nodes_label`
+#. :ref:`Predefine Switches <predefined_switches_label>`
+#. :ref:`Predefine Server Node <predefined_server_nodes_label>`
 
 
 .. _predefined_switches_label:
@@ -51,6 +53,10 @@ After switches are defined, the server node can be predefined with the following
     nodeadd cn1 groups=powerLE,all
     chdef cn1 mgt=ipmi cons=ipmi ip=10.0.101.1 bmc=50.0.101.1 netboot=petitboot installnic=mac primarynic=mac
     chdef cn1 switch=switch1 switchport=0
+
+In order to do BMC configuration during the discovery process, set ``runcmd=bmcsetup``. For more info about chain, please refer to :doc:`Chain <../../../../../advanced/chain/index>`   ::
+
+    chdef cn1 chain="runcmd=bmcsetup"
 
 Add cn1 into DNS::
 

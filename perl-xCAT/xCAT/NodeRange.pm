@@ -200,6 +200,7 @@ sub expandatom {
     }
 	my $verify = (scalar(@_) >= 1 ? shift : 1);
   my %options = @_;      # additional options
+        $options{keepmissing} = 1;
         my @nodes= ();
     #TODO: these env vars need to get passed by the client to xcatd
 	my $nprefix=(defined ($ENV{'XCAT_NODE_PREFIX'}) ? $ENV{'XCAT_NODE_PREFIX'} : 'node');
@@ -225,8 +226,12 @@ sub expandatom {
         }
         if ($grptab and (($glstamp < (time()-5)) or (not $didgrouplist and not scalar @grplist))) { 
             $didgrouplist = 1;
-	    $glstamp=time();
-            @grplist = @{$grptab->getAllEntries()};
+            $glstamp=time();
+            my $grplist_ptr = $grptab->getAllEntries();
+            if (!$grplist_ptr) {
+               return undef;
+            }
+            @grplist = @{$grplist_ptr};
         }
         my $isdynamicgrp = 0;
         foreach my $grpdef_ref (@grplist) {

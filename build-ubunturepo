@@ -6,20 +6,15 @@
 #
 # 
 # Getting Started:
-#  - Check out the xcat-core svn repository (either the trunk or a branch) into
-#    a dir called <rel>/src/xcat-core, where <rel> is the same as the release dir it will be
-#    uploaded to in sourceforge (e.g. devel, or 2.3).
-#  - You probably also want to put root's pub key from the build machine onto sourceforge for
-#    the upload user listed below, so you don't have to keep entering pw's.  You can do this
-#    at https://xcat.org/setting/ssh
+#  - Clone the xcat-core git repository int a directory called <rel>/src/xcat-core, where <rel>
+#    is the same name as the release dir it is uploaded to xcat.org (e.g devel, 2.9, 2.10)
 #  - make sure reprepro is installed on the build machine
-#  - Run this script from the local svn repository you just created.  It will create the other directories that are needed.
+#  - Run this script from the local git repository you just created.  It will create the other directories that are needed.
 
 # Usage:  attr=value attr=value ... ./build-ubunturepo { -c | -d }
 #               PROMOTE=1 - if the attribute "PROMOTE" is specified, means an official dot release.  This does not
 #                           actually build xcat, just uploads the most recent snap build to http://xcat.org/files/xcat/ .
-#                           If not specified, a snap build is assumed, which uploads to https://xcat.org/files/yum/
-#                           or https://xcat.org/files/aix/.
+#                           If not specified, a snap build is assumed, which uploads to https://xcat.org/files/xcat/
 #               PREGA=1 - use this option with PROMOTE=1 on a branch that already has a released dot release, but this 
 #                           build is a GA candidate build, not to be released yet.  This will result in the tarball 
 #                           being uploaded to http://xcat.org/files/xcat/repos/apt
@@ -40,8 +35,8 @@
 printusage()
 {
     printf "Usage: %s {-c | -d} \n" $(basename $0) >&2
-    echo "    -c : Build the xcat core packages and create the repo"
-    echo "    -d : Create the xcat dep repo. Building the xcat dep packages can refer \"build-debs-all\" from svn"
+    echo "    -c : Build the xcat-core packages and create the repo"
+    echo "    -d : Create the xcat-dep repo."
 }
 # For the purpose of getting the distribution name
 if [[ ! -f /etc/lsb-release ]]; then 
@@ -50,11 +45,16 @@ if [[ ! -f /etc/lsb-release ]]; then
 fi 
 . /etc/lsb-release
 
-REPREPRO=`which reprepro >> /dev/null 2>&1; echo $?`
-if [[ ${REPREPRO} != 0 ]]; then
-    echo "ERROR: Could not find reprepro, verify that reprepro is installed on this machine.  Cannot continue!"
-    exit 1
-fi
+# Check the necessary packages before starting the build
+declare -a packages=( "reprepro" "devscripts" "debhelper" "libsoap-lite-perl" "libdbi-perl" "quilt" )
+
+for package in ${packages[@]}; do
+    RC=`dpkg -l | grep $package >> /dev/null 2>&1; echo $?`
+    if [[ ${RC} != 0 ]]; then
+        echo "ERROR: Could not find $package, install using 'apt-get install $package' to continue"
+        exit 1
+    fi
+done
 
 # Process cmd line variable assignments, assigning each attr=val pair to a variable of same name
 for i in $*; do
@@ -68,7 +68,7 @@ for i in $*; do
 done
 
 # Supported distributions
-dists="saucy trusty utopic"
+dists="saucy trusty utopic xenial"
 
 c_flag=            # xcat-core (trunk-delvel) path
 d_flag=            # xcat-dep (trunk) path
@@ -292,12 +292,13 @@ then
     mkdir conf
 
     for dist in $dists; do
-       if [ "$dist" = "trusty" ] || [ "$dist" = "utopic" ]; then
-           tmp_out_arch="amd64 ppc64el"
-       else
-           tmp_out_arch="amd64"
-       fi
-       cat << __EOF__ >> conf/distributions
+        # for all releases moving forward, support amd64 and ppc64el
+        tmp_out_arch="amd64 ppc64el"
+        if [ "$dist" = "saucy" ]; then
+            # for older releases of Ubuntu that does not support ppc64el
+            tmp_out_arch="amd64"
+        fi
+        cat << __EOF__ >> conf/distributions
 Origin: xCAT internal repository
 Label: xcat-core bazaar repository
 Codename: $dist
@@ -319,14 +320,14 @@ __EOF__
     amd_files=`ls ../$package_dir_name/*.deb | grep -v "ppc64el"`
     all_files=`ls ../$package_dir_name/*.deb`
     for dist in $dists; do
-      if [ "$dist" = "trusty" ] || [ "$dist" = "utopic" ]; then
-          deb_files=$all_files
-      else
-          deb_files=$amd_files
-      fi
-      for file in $deb_files; do
-	reprepro -b ./ includedeb $dist $file;
-      done
+        deb_files=$all_files
+        if [ "$dist" = "saucy" ]; then
+            # for older releases of Ubuntu that does not support ppc64el
+            deb_files=$amd_files
+        fi
+        for file in $deb_files; do
+            reprepro -b ./ includedeb $dist $file;
+        done
     done
     #create the mklocalrepo script
     cat << '__EOF__' > mklocalrepo.sh
@@ -421,11 +422,11 @@ then
 
     #create the conf/distributions file
     for dist in $dists; do
-       if [ "$dist" = "trusty" ] || [ "$dist" = "utopic" ]; then
-           tmp_out_arch="amd64 ppc64el"
-       else 
-           tmp_out_arch="amd64"
-       fi
+        tmp_out_arch="amd64 ppc64el"
+        if [ "$dist" = "saucy" ]; then
+            # for older releases of Ubuntu that does not support ppc64el
+            tmp_out_arch="amd64"
+        fi
         cat << __EOF__ >> conf/distributions
 Origin: xCAT internal repository
 Label: xcat-dep bazaar repository
@@ -448,14 +449,14 @@ __EOF__
     amd_files=`ls ../debs/*.deb | grep -v "ppc64el"`
     all_files=`ls ../debs/*.deb`
     for dist in $dists; do
-      if [ "$dist" = "trusty" ] || [ "$dist" = "utopic" ]; then
-          deb_files=$all_files
-      else
-          deb_files=$amd_files
-      fi
-      for file in $deb_files; do
-	reprepro -b ./ includedeb $dist $file;
-      done
+        deb_files=$all_files
+        if [ "$dist" = "saucy" ]; then
+            # for older releases of Ubuntu that does not support ppc64el
+            deb_files=$amd_files
+        fi
+        for file in $deb_files; do
+            reprepro -b ./ includedeb $dist $file;
+        done
     done
 
     cat << '__EOF__' > mklocalrepo.sh
@@ -483,7 +484,7 @@ __EOF__
     chmod -R g+w xcat-dep
 
     #create the tar ball
-    dep_tar_name=xcat-dep-ubuntu-`date +%Y%m%d%H%M`.tar.bz
+    dep_tar_name=xcat-dep-ubuntu-`date +%Y%m%d%H%M`.tar.bz2
     tar -hjcf $dep_tar_name xcat-dep
     chgrp root $dep_tar_name
     chmod g+w $dep_tar_name

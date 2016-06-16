@@ -1,5 +1,4 @@
-# The shell is commented out so that it will run in bash on linux and ksh on aix
-#  !/bin/bash
+#!/bin/bash
 
 # Build and upload the xcat-core code, on either linux or aix.
 
@@ -566,28 +565,3 @@ else
     while [ $((i+=1)) -le 5 ] && ! rsync -v --force $TARNAME $USER@$SERVER:$YUMDIR/$YUM/$REL$EMBEDDIR/
     do : ; done
 fi
-
-# Extract and upload the man pages in html format
-#if [ "$OSNAME" != "AIX" -a "$REL" = "devel" -a "$PROMOTE" != 1 -a -z "$EMBED" ]; then
-#    echo "Extracting and uploading man pages to htdocs/ ..."
-#    mkdir -p man
-#    cd man
-#    rm -rf opt
-#    rpm2cpio ../$XCATCORE/xCAT-client-*.$NOARCH.rpm | cpio -id '*.html'
-#    rpm2cpio ../$XCATCORE/perl-xCAT-*.$NOARCH.rpm | cpio -id '*.html'
-#    rpm2cpio ../$XCATCORE/xCAT-test-*.$NOARCH.rpm | cpio -id '*.html'
-#    rpm2cpio ../$XCATCORE/xCAT-buildkit-*.$NOARCH.rpm | cpio -id '*.html'
-#    #rpm2cpio ../$XCATCORE/xCAT-OpenStack-*.x86_64.rpm | cpio -id '*.html'
-#    rpm2cpio ../$XCATCORE/xCAT-SoftLayer-*.$NOARCH.rpm | cpio -id '*.html'
-#    rpm2cpio ../$XCATCORE/xCAT-vlan-*.$NOARCH.rpm | cpio -id '*.html'
-#    i=0
-#    while [ $((i+=1)) -le 5 ] && ! rsync $verboseflag -r opt/xcat/share/doc/man1 opt/xcat/share/doc/man3 opt/xcat/share/doc/man5 opt/xcat/share/doc/man7 opt/xcat/share/doc/man8 $UPLOADUSER,xcat@web.sourceforge.net:htdocs/
-#    do : ; done
-#
-#    # extract and upload the tools readme
-#    rpm2cpio ../$XCATCORE/xCAT-server-*.$NOARCH.rpm | cpio -id ./opt/xcat/share/xcat/tools/README.html
-#    i=0
-#    while [ $((i+=1)) -le 5 ] && ! rsync $verboseflag opt/xcat/share/xcat/tools/README.html $UPLOADUSER,xcat@web.sourceforge.net:htdocs/tools/
-#    do : ; done
-#    cd ..
-#fi

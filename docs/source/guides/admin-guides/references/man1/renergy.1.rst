@@ -19,50 +19,30 @@ renergy.1
 ****************
 
 
-\ **renergy**\  [-h | --help]
+\ **renergy**\  [\ **-h**\  | \ **-**\ **-help**\ ]
 
-\ **renergy**\  [-v | --version]
+\ **renergy**\  [\ **-v**\  | \ **-**\ **-version**\ ]
 
 \ **Power 6 server specific :**\ 
 
 
-\ **renergy**\  \ *noderange*\  [-V] { all | [savingstatus] [cappingstatus] 
-[cappingmaxmin] [cappingvalue] [cappingsoftmin] [averageAC] 
-[averageDC] [ambienttemp] [exhausttemp] [CPUspeed] 
-[syssbpower] [sysIPLtime]}
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **all | [savingstatus] [cappingstatus] [cappingmaxmin] [cappingvalue] [cappingsoftmin] [averageAC] [averageDC] [ambienttemp] [exhausttemp] [CPUspeed] [syssbpower] [sysIPLtime]**\ }
 
-\ **renergy**\  \ *noderange*\  [-V] { savingstatus={on | off} 
-| cappingstatus={on | off} | cappingwatt=watt 
-| cappingperc=percentage }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **savingstatus={on | off} | cappingstatus={on | off} | cappingwatt=watt | cappingperc=percentage**\ }
 
 \ **Power 7 server specific :**\ 
 
 
-\ **renergy**\  \ *noderange*\  [-V] { all | [savingstatus] [dsavingstatus]
-[cappingstatus] [cappingmaxmin] [cappingvalue] [cappingsoftmin]
-[averageAC] [averageDC] [ambienttemp] [exhausttemp] [CPUspeed]
-[syssbpower] [sysIPLtime] [fsavingstatus] [ffoMin] [ffoVmin]
-[ffoTurbo] [ffoNorm] [ffovalue]}
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **all | [savingstatus] [dsavingstatus] [cappingstatus] [cappingmaxmin] [cappingvalue] [cappingsoftmin] [averageAC] [averageDC] [ambienttemp] [exhausttemp] [CPUspeed] [syssbpower] [sysIPLtime] [fsavingstatus] [ffoMin] [ffoVmin] [ffoTurbo] [ffoNorm] [ffovalue]**\ }
 
-\ **renergy**\  \ *noderange*\  [-V] { savingstatus={on | off}
-| dsavingstatus={on-norm | on-maxp | off}
-| fsavingstatus={on | off} | ffovalue=MHZ
-| cappingstatus={on | off} | cappingwatt=watt
-| cappingperc=percentage }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **savingstatus={on | off} | dsavingstatus={on-norm | on-maxp | off} | fsavingstatus={on | off} | ffovalue=MHZ | cappingstatus={on | off} | cappingwatt=watt | cappingperc=percentage**\ }
 
 \ **Power 8 server specific :**\ 
 
 
-\ **renergy**\  \ *noderange*\  [-V] { all | [savingstatus] [dsavingstatus] 
-[averageAC] [averageAChistory] [averageDC] [averageDChistory] 
-[ambienttemp] [ambienttemphistory] [exhausttemp] [exhausttemphistory] 
-[fanspeed] [fanspeedhistory] [CPUspeed] [CPUspeedhistory]
-[syssbpower] [sysIPLtime] [fsavingstatus] [ffoMin] [ffoVmin] 
-[ffoTurbo] [ffoNorm] [ffovalue]}
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **all | [savingstatus] [dsavingstatus] [averageAC] [averageAChistory] [averageDC] [averageDChistory] [ambienttemp] [ambienttemphistory] [exhausttemp] [exhausttemphistory] [fanspeed] [fanspeedhistory] [CPUspeed] [CPUspeedhistory] [syssbpower] [sysIPLtime] [fsavingstatus] [ffoMin] [ffoVmin] [ffoTurbo] [ffoNorm] [ffovalue]**\ }
 
-\ **renergy**\  \ *noderange*\  [-V] { savingstatus={on | off} 
-| dsavingstatus={on-norm | on-maxp | off}
-| fsavingstatus={on | off} | ffovalue=MHZ }
+\ **renergy**\  \ *noderange*\  \ **[-V] {savingstatus={on | off} | dsavingstatus={on-norm | on-maxp | off} | fsavingstatus={on | off} | ffovalue=MHZ }**\ 
 
 \ *NOTE:*\  The setting operation for \ **Power 8**\  server is only supported 
 for the server which is running in PowerVM mode. Do NOT run the setting 
@@ -74,23 +54,14 @@ for the server which is running in OPAL mode.
 \ **For Management Modules:**\ 
 
 
-\ **renergy**\  \ *noderange*\  [-V] { all | pd1all | pd2all | [pd1status] 
-[pd2status] [pd1policy] [pd2policy] [pd1powermodule1] 
-[pd1powermodule2] [pd2powermodule1] [pd2powermodule2] 
-[pd1avaiablepower] [pd2avaiablepower] [pd1reservedpower] 
-[pd2reservedpower] [pd1remainpower] [pd2remainpower] 
-[pd1inusedpower] [pd2inusedpower] [availableDC] [averageAC] 
-[thermaloutput] [ambienttemp] [mmtemp] }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **all | pd1all | pd2all | [pd1status] [pd2status] [pd1policy] [pd2policy] [pd1powermodule1] [pd1powermodule2] [pd2powermodule1] [pd2powermodule2] [pd1avaiablepower] [pd2avaiablepower] [pd1reservedpower] [pd2reservedpower] [pd1remainpower] [pd2remainpower] [pd1inusedpower] [pd2inusedpower] [availableDC] [averageAC] [thermaloutput] [ambienttemp] [mmtemp]**\ }
 
 \ **For a blade server nodes:**\ 
 
 
-\ **renergy**\  \ *noderange*\  [-V] { all | [averageDC]  
-[capability] [cappingvalue] [CPUspeed] [maxCPUspeed] 
-[savingstatus] [dsavingstatus] }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **all | [averageDC] [capability] [cappingvalue] [CPUspeed] [maxCPUspeed] [savingstatus] [dsavingstatus]**\ }
 
-\ **renergy**\  \ *noderange*\  [-V] { savingstatus={on | off} 
-| dsavingstatus={on-norm | on-maxp | off} }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **savingstatus={on | off} | dsavingstatus={on-norm | on-maxp | off}**\ }
 
 \ **Flex specific :**\ 
 
@@ -98,31 +69,26 @@ for the server which is running in OPAL mode.
 \ **For Flex Management Modules:**\ 
 
 
-\ **renergy**\  \ *noderange*\  [-V] { all | [powerstatus]
-[powerpolicy] [powermodule] [avaiablepower] [reservedpower]
-[remainpower] [inusedpower] [availableDC] [averageAC]
-[thermaloutput] [ambienttemp] [mmtemp] }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **all | [powerstatus] [powerpolicy] [powermodule] [avaiablepower] [reservedpower] [remainpower] [inusedpower] [availableDC] [averageAC] [thermaloutput] [ambienttemp] [mmtemp]**\ }
 
 \ **For Flex node (power and x86):**\ 
 
 
-\ **renergy**\  \ *noderange*\  [-V] { all | [averageDC]
-[capability] [cappingvalue] [cappingmaxmin] [cappingmax] 
-[cappingmin] [cappingGmin] [CPUspeed] [maxCPUspeed]
-[savingstatus] [dsavingstatus] }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **all | [averageDC] [capability] [cappingvalue] [cappingmaxmin] [cappingmax] [cappingmin] [cappingGmin] [CPUspeed] [maxCPUspeed] [savingstatus] [dsavingstatus]**\ }
 
-\ **renergy**\  \ *noderange*\  [-V] { cappingstatus={on | off}
-| cappingwatt=watt | cappingperc=percentage 
-| savingstatus={on | off} | dsavingstatus={on-norm | on-maxp | off} }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **cappingstatus={on | off} | cappingwatt=watt | cappingperc=percentage | savingstatus={on | off} | dsavingstatus={on-norm | on-maxp | off}**\ }
 
 \ **iDataPlex specific :**\ 
 
 
-\ **renergy**\  \ *noderange*\  [-V] [ { cappingmaxmin | cappingmax | cappingmin } ]
-[cappingstatus] [cappingvalue] [relhistogram]
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] [{\ **cappingmaxmin | cappingmax | cappingmin}] [cappingstatus] [cappingvalue] [relhistogram]**\ }
 
-\ **renergy**\  \ *noderange*\  [-V] { cappingstatus={on | enable | off | disable}
-| {cappingwatt|cappingvalue}=watt }
+\ **renergy**\  \ *noderange*\  [\ **-V**\ ] {\ **cappingstatus={on | enable | off | disable} | {cappingwatt|cappingvalue}=watt**\ }
+
+\ **OpenPOWER server specific :**\ 
+
+
+\ **renergy**\  \ *noderange*\  {\ **powerusage | temperature**\ }
 
 
 *******************
@@ -156,6 +122,8 @@ The attributes listed in the \ **SYNOPSIS**\  section are which ones can be hand
 \ **renergy**\  command. But for each specific type of server, there are some attributes that
 are not supported. If user specifies an attribute which is not supported by a specific
 server, the return value of this attribute will be 'na'.
+
+\ **Note**\ : the options \ *powerusage*\  and \ *temperature*\  are only supported for \ **OpenPOWER servers**\ .
 
 The supported attributes for each specific system p hardware type is listed as follows:
 
@@ -251,13 +219,13 @@ so no additional plugins are needed for BladeCenter.)
 
 
 
-\ **-h | --help**\ 
+\ **-h | -**\ **-help**\ 
  
  Display the usage message.
  
 
 
-\ **-v | --version**\ 
+\ **-v | -**\ **-version**\ 
  
  Display the version information.
  
@@ -320,7 +288,7 @@ so no additional plugins are needed for BladeCenter.)
  
  Note: For Blade Center, the value of attribute 
  averageAC is the total AC power being consumed by all modules
-  in the chassis. It also includes power consumed by the Chassis 
+ in the chassis. It also includes power consumed by the Chassis 
  Cooling Devices for BCH chassis.
  
 
@@ -743,6 +711,19 @@ so no additional plugins are needed for BladeCenter.)
  
 
 
+\ **powerusage**\ 
+ 
+ Query System Power Statistics with DCMI (Data Center Manageability Interface).
+ 
+
+
+\ **temperature**\ 
+ 
+ Query the temperature from DCMI (Data Center Manageability Interface) Temperature sensor. 
+ Currently, only CPU temperature and baseboard temperature sensor available for OpenPOWER servers.
+ 
+
+
 
 ********************
 \ **RETURN VALUE**\ 
@@ -760,11 +741,13 @@ so no additional plugins are needed for BladeCenter.)
 
 
 
-1
+1. Query all attributes which CEC1,CEC2 supported.
  
- Query all attributes which CEC1,CEC2 supported.
  
- \ **renergy**\  CEC1,CEC2 all
+ .. code-block:: perl
+ 
+   renergy CEC1,CEC2 all
+ 
  
  The output of the query operation:
  
@@ -800,11 +783,13 @@ so no additional plugins are needed for BladeCenter.)
  
 
 
-2
+2. Query the \ **fanspeed**\  attribute for Power8 CEC.
  
- Query the \ **fanspeed**\  attribute for Power8 CEC.
  
- \ **renergy**\  CEC1 fanspeed
+ .. code-block:: perl
+ 
+   renergy CEC1 fanspeed
+ 
  
  The output of the query operation:
  
@@ -823,9 +808,7 @@ so no additional plugins are needed for BladeCenter.)
  
 
 
-3
- 
- Query the historical records for the \ **CPUspeed**\  attribute. (Power8 CEC)
+3. Query the historical records for the \ **CPUspeed**\  attribute. (Power8 CEC)
  
  \ **renergy**\  CEC1 CPUspeedhistory
  
@@ -853,7 +836,11 @@ so no additional plugins are needed for BladeCenter.)
  
  Query all the attirbutes for management module node MM1. (For chassis)
  
- \ **renergy**\  MM1 all
+ 
+ .. code-block:: perl
+ 
+   renergy MM1 all
+ 
  
  The output of the query operation:
  
@@ -879,18 +866,19 @@ so no additional plugins are needed for BladeCenter.)
       mm1: pd2powermodule2: Bay 4: 2940W
       mm1: pd2remainpower: 51W
       mm1: pd2reservedpower: 2889W
-      mm1: pd2status: 2 - Warning: Power redundancy does not exist 
-  in this power domain.
+      mm1: pd2status: 2 - Warning: Power redundancy does not exist in this power domain.
       mm1: thermaloutput: 9717.376000 BTU/hour
  
  
 
 
-5
+5. Query all the attirbutes for blade server node blade1.
  
- Query all the attirbutes for blade server node blade1.
  
- \ **renergy**\  blade1 all
+ .. code-block:: perl
+ 
+   renergy blade1 all
+ 
  
  The output of the query operation:
  
@@ -908,12 +896,14 @@ so no additional plugins are needed for BladeCenter.)
  
 
 
-6
+6. Query the attributes savingstatus, cappingstatus 
+and CPUspeed for server CEC1.
  
- Query the attributes savingstatus, cappingstatus 
- and CPUspeed for server CEC1.
  
- \ **renergy**\  CEC1 savingstatus cappingstatus CPUspeed
+ .. code-block:: perl
+ 
+   renergy CEC1 savingstatus cappingstatus CPUspeed
+ 
  
  The output of the query operation:
  
@@ -927,11 +917,13 @@ so no additional plugins are needed for BladeCenter.)
  
 
 
-7
+7. Turn on the power saving function of CEC1.
  
- Turn on the power saving function of CEC1.
  
- \ **renergy**\  CEC1 savingstatus=on
+ .. code-block:: perl
+ 
+   renergy CEC1 savingstatus=on
+ 
  
  The output of the setting operation:
  
@@ -944,12 +936,14 @@ so no additional plugins are needed for BladeCenter.)
  
 
 
-8
+8. Set the power capping value base on the percentage of the 
+max-min capping value. Here, set it to 50%.
  
- Set the power capping value base on the percentage of the 
- max-min capping value. Here, set it to 50%.
  
- \ **renergy**\  CEC1 cappingperc=50
+ .. code-block:: perl
+ 
+   renergy CEC1 cappingperc=50
+ 
  
  If the maximum capping value of the CEC1 is 850w, and the 
  minimum capping value of the CEC1 is 782w, the Power Capping 
@@ -966,6 +960,32 @@ so no additional plugins are needed for BladeCenter.)
  
 
 
+9. Query powerusage and temperature for OpenPOWER servers.
+ 
+ 
+ .. code-block:: perl
+ 
+   renergy ops01 powerusage temperature
+ 
+ 
+ The output will be like this:
+ 
+ 
+ .. code-block:: perl
+ 
+      ops01: Current Power                        : 591W
+      ops01: Minimum Power over sampling duration : 558W
+      ops01: Maximum Power over sampling duration : 607W
+      ops01: Average Power over sampling duration : 572W
+      ops01: Time Stamp                           : 11/18/2015 - 1:4:1
+      ops01: Statistics reporting time period     : 10000 milliseconds
+      ops01: Power Measurement                    : Active
+      ops01: CPU Temperature Instance 0           : +39 Centigrade
+      ops01: Baseboard temperature Instance 0     : +28 Centigrade
+ 
+ 
+
+
 
 ******************
 \ **REFERENCES**\ 
@@ -973,39 +993,21 @@ so no additional plugins are needed for BladeCenter.)
 
 
 
-1
+1. For more information on 'Power System Energy Management':
  
- For more information on 'Power System Energy Management':
- 
- 
- .. code-block:: perl
- 
-      http://www-03.ibm.com/systems/power/software/energy/index.html
- 
+ http://www-03.ibm.com/systems/power/software/energy/index.html
  
 
 
-2
+2. EnergyScale white paper for Power6:
  
- EnergyScale white paper for Power6:
- 
- 
- .. code-block:: perl
- 
-      http://www-03.ibm.com/systems/power/hardware/whitepapers/energyscale.html
- 
+ http://www-03.ibm.com/systems/power/hardware/whitepapers/energyscale.html
  
 
 
-3
+3. EnergyScale white paper for Power7:
  
- EnergyScale white paper for Power7:
- 
- 
- .. code-block:: perl
- 
-      http://www-03.ibm.com/systems/power/hardware/whitepapers/energyscale7.html
- 
+ http://www-03.ibm.com/systems/power/hardware/whitepapers/energyscale7.html
  
 
 
