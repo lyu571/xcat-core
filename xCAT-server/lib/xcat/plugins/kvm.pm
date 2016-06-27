@@ -234,7 +234,10 @@ sub get_storage_pool_by_url {
     eval { $poolobj->build(); };
     if ($@) {
         my $error = $@;
-        unless ($error =~ /vgcreate.*exit status 3/ or $error =~ /pvcreate.*exit status 5/) {
+	# Some errors from building storage pool object are safe to ignore.
+	# For example, "File exists" is returned when a directory location for storage pool is already there. 
+	# The storage pool still gets built, and the next statement to create storage pool will work.
+        unless ($error =~ /vgcreate.*exit status 3/ or $error =~ /pvcreate.*exit status 5/ or $error =~ /File exists/) {
             die $@;
         }
     }
@@ -2997,6 +3000,9 @@ sub power {
         }
     }
     my $errstr;
+    my $newstat;
+    my %newnodestatus=();
+
     if ($subcommand eq 'on') {
         unless ($dom) {
             if ($use_xhrm) {
@@ -3009,6 +3015,9 @@ sub power {
             #this worked before I started doing the offline xml store because every rpower on tried to rebuild
             ($dom, $errstr) = makedom($node, $cdloc);
             if ($errstr) { return (1, $errstr); }
+            else {
+                $newstat = $::STATUS_POWERING_ON;
+            }
         } elsif (not $dom->is_active()) {
             $dom->create();
         } else {
@@ -3020,6 +3029,7 @@ sub power {
             $updatetable->{kvm_nodedata}->{$node}->{xml} = $newxml;
             if ($dom->is_active()) {
                 $dom->destroy();
+                $newstat=$::STATUS_POWERING_OFF;
             }
             undef $dom;
         } else { $retstring .= "$status_noop"; }
@@ -3028,6 +3038,7 @@ sub power {
             my $newxml = $dom->get_xml_description();
             $updatetable->{kvm_nodedata}->{$node}->{xml} = $newxml;
             $dom->shutdown();
+            $newstat=$::STATUS_POWERING_OFF;
         } else { $retstring .= "$status_noop"; }
     } elsif ($subcommand eq 'reset') {
         if ($dom && $dom->is_active()) {
@@ -3040,6 +3051,7 @@ sub power {
                 $updatetable->{kvm_nodedata}->{$node}->{xml} = $newxml;
                 my $persist = $dom->is_persistent();
                 $dom->destroy();
+                $newstat=$::STATUS_POWERING_OFF;
                 if ($persist) { $dom->undefine(); }
                 undef $dom;
                 if ($use_xhrm) {
@@ -3047,6 +3059,10 @@ sub power {
                 }
                 ($dom, $errstr) = makedom($node, $cdloc, $newxml);
                 if ($errstr) { return (1, $errstr); }
+                else {
+                    $newstat=$::STATUS_POWERING_ON;
+                }
+                
             } else { #no changes, just restart the domain TODO when possible, stupid lack of feature...
             }
             $retstring .= "reset";
@@ -3056,6 +3072,10 @@ sub power {
             return (1, "Unsupported power directive '$subcommand'");
         }
     }
+
+    $newnodestatus{$newstat}=[$node];
+    xCAT::Utils->filter_nostatusupdate(\%newnodestatus);
+    xCAT_monitoring::monitorctrl::setNodeStatusAttributes(\%newnodestatus, 1);
 
     unless ($retstring =~ /reset/) {
         $retstring = $retstring . getpowstate($dom);
@@ -3771,35 +3791,6 @@ sub process_request {
             }
 
             #print "oldstatus:" . Dumper(\%oldnodestatus);
-
-            #set the new status to the nodelist.status
-            my %newnodestatus = ();
-            my $newstat;
-            if (($subcommand eq 'off') || ($subcommand eq 'softoff')) {
-                my $newstat = $::STATUS_POWERING_OFF;
-                $newnodestatus{$newstat} = \@allnodes;
-            } else {
-
-                #get the current nodeset stat
-                if (@allnodes > 0) {
-                    my $nsh = {};
-                    my ($ret, $msg) = xCAT::SvrUtils->getNodesetStates(\@allnodes, $nsh);
-                    if (!$ret) {
-                        foreach (keys %$nsh) {
-                            my $newstat = xCAT_monitoring::monitorctrl->getNodeStatusFromNodesetState($_, "rpower");
-                            $newnodestatus{$newstat} = $nsh->{$_};
-                        }
-                    } else {
-                        $callback->({ data => $msg });
-                    }
-                }
-            }
-
-            #donot update node provision status (installing or netbooting) here
-            xCAT::Utils->filter_nostatusupdate(\%newnodestatus);
-
-            #print "newstatus" . Dumper(\%newnodestatus);
-            xCAT_monitoring::monitorctrl::setNodeStatusAttributes(\%newnodestatus, 1);
         }
     }
 
